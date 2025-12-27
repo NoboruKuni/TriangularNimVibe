@@ -11,11 +11,12 @@
 :root {
   --bg-gradient: linear-gradient(135deg, #0f172a, #020617);
   --panel-bg: rgba(255, 255, 255, 0.06);
-  --primary: #38bdf8;
-  --accent: #facc15;
+  --primary: #38bdf8;  /* 青藍色 */
+  --accent: #facc15;   /* 金黃色 */
   --text: #f1f5f9;
   --danger: #ef4444;
   --warn: #f97316;
+  --disabled: #475569;
 }
 
 body {
@@ -102,7 +103,7 @@ select {
   flex: 0 0 280px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px; /* 稍微縮小間距讓版面更緊湊 */
 }
 
 @media (max-width: 900px) {
@@ -129,7 +130,7 @@ canvas {
   touch-action: none;
 }
 
-/* 勝負結果 Banner (覆蓋層) */
+/* 勝負結果 Banner */
 #result-overlay {
   position: absolute;
   top: 50%;
@@ -187,20 +188,21 @@ canvas {
   text-align: center;
   border: 1px solid rgba(56, 189, 248, 0.3);
   background: rgba(15, 23, 42, 0.8);
+  padding: 15px; /* 稍微縮小內距 */
 }
 .rule-title {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #94a3b8;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 #rule-hint {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: var(--primary);
   text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* 狀態文字 */
@@ -222,21 +224,48 @@ canvas {
   margin-top: 15px;
 }
 
+/* --- 按鈕樣式 --- */
 button {
   font-size: 1rem;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 10px 16px;
+  border-radius: 8px;
   border: none;
   background: var(--primary);
   color: #0f172a;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 button:hover:not(:disabled) { filter: brightness(1.15); transform: translateY(-2px); }
-button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; opacity: 0.8; }
+button:disabled { background: var(--disabled); color: #94a3b8; cursor: not-allowed; opacity: 0.7; transform: none; }
 
-.btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+/* 禁用狀態的特殊樣式 (強制不互動) */
+button.disabled-visual { 
+  background: transparent; 
+  border: 1px solid #475569; 
+  color: #64748b; 
+  cursor: not-allowed; 
+  pointer-events: none; 
+}
+
+/* 次要按鈕 (空心) */
+.btn-secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+/* 切換按鈕 (特殊樣式：類似次要按鈕，但更明顯是用來切換的) */
+.btn-switch { 
+  background: rgba(56, 189, 248, 0.1); 
+  border: 1px solid var(--primary); 
+  color: var(--primary); 
+  width: 100%; /* 讓它在側邊欄佔滿寬度，比較整齊 */
+  margin-bottom: 5px;
+}
+.btn-switch:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.2);
+}
+
 .btn-danger { background: var(--danger); color: white; }
 .btn-warn { background: var(--warn); color: #0f172a; }
 
@@ -262,7 +291,7 @@ button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; opac
   font-weight: bold;
 }
 
-/* --- 說明文字 (列表優化) --- */
+/* --- 說明文字 --- */
 .rule-box {
   margin-top: 20px;
   max-height: 400px;
@@ -274,15 +303,8 @@ button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; opac
   color: #cbd5e1;
   text-align: left;
 }
-/* 讓項目編號對齊 */
-#howto-text ol {
-  padding-left: 20px;
-  margin: 0;
-}
-#howto-text li {
-  margin-bottom: 8px;
-  padding-left: 5px;
-}
+#howto-text ol { padding-left: 20px; margin: 0; }
+#howto-text li { margin-bottom: 8px; padding-left: 5px; }
 #howto-text b { color: var(--accent); }
 </style>
 </head>
@@ -376,12 +398,20 @@ button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; opac
       </div>
     </div>
 
-    <div class="panel controls" style="display:flex; flex-direction:column;">
+    <div class="panel controls" style="display:flex; flex-direction:column; gap:12px;">
+      
+      <div>
+        <button id="btn-turn" class="btn-switch" onclick="game.toggleTurn()">
+          </button>
+      </div>
+
       <div style="display:flex; gap:10px;">
         <button id="btn-undo" class="btn-warn" onclick="game.undo()" disabled style="flex:1;" data-i18n="undo">悔棋</button>
         <button id="btn-surrender" class="btn-danger" onclick="game.surrender()" style="flex:1;" data-i18n="surrender">認輸</button>
       </div>
-      <hr style="width:100%; border:0; border-top:1px solid rgba(255,255,255,0.1); margin:10px 0;">
+
+      <hr style="width:100%; border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;">
+      
       <button class="btn-secondary" onclick="game.restart()" data-i18n="restart">再來一局</button>
       <button class="btn-secondary" onclick="game.backToMenu()" data-i18n="back">回選單</button>
     </div>
@@ -412,6 +442,9 @@ const I18N = {
     status_turn: "輪到：{player}",
     status_ai: "🤖 AI 正在思考...",
     
+    // 按鈕文字 - 格式: 功能名稱 (目前狀態)
+    btn_switch_prefix: "切換先手", 
+    
     win_title: "🎉 遊戲結束",
     win_msg: "{winner} 獲勝！",
     iso_title: "⚠️ 孤立棋判定",
@@ -425,8 +458,7 @@ const I18N = {
         <li><b>如何移動</b>：
            點擊一顆棋子作為<b>起點</b>，再點擊另一顆作為<b>終點</b>。兩點之間必須是連續的直線。若只想移除一顆，請點擊同一顆棋子兩次。</li>
         <li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li>
-        <li><b>孤立棋子判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負，節省時間。</li>
-        <li><b>功能</b>：支援每局 2 次悔棋；若局面無望可直接認輸。</li>
+        <li><b>孤立棋子判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li>
       </ol>
     `
   },
@@ -448,6 +480,8 @@ const I18N = {
     status_turn: "Turn: {player}",
     status_ai: "🤖 AI is thinking...",
     
+    btn_switch_prefix: "Switch Turn Order",
+
     win_title: "🎉 Game Over",
     win_msg: "{winner} Wins!",
     iso_title: "⚠️ Auto-Resolution",
@@ -461,8 +495,7 @@ const I18N = {
         <li><b>Moves</b>: 
            Click a stone for <b>Start</b>, then click another for <b>End</b>. Stones must form a continuous line. Click the same stone twice to pick just one.</li>
         <li><b>Limits</b>: Min 1 stone, Max (Rows - 1) stones per turn.</li>
-        <li><b>Isolated Stones</b>: When no adjacent stones remain, the system automatically calculates the winner based on parity.</li>
-        <li><b>Extras</b>: 2 Undos per game. Surrender button available.</li>
+        <li><b>Isolated Stones</b>: System automatically calculates winner when no moves are possible.</li>
       </ol>
     `
   },
@@ -484,6 +517,8 @@ const I18N = {
     status_turn: "手番：{player}",
     status_ai: "🤖 AI考案中...",
     
+    btn_switch_prefix: "先攻交代",
+
     win_title: "🎉 勝負あり",
     win_msg: "勝者：{winner}",
     iso_title: "⚠️ 自動判定",
@@ -495,10 +530,8 @@ const I18N = {
       <ol>
         <li><b>目的</b>：交互に石を取り合い、最後の石に関するルールで勝敗を決めます。</li>
         <li><b>操作方法</b>：
-           石をクリックして<b>始点</b>を選び、別の石をクリックして<b>終点</b>を選びます。直線上に並んだ石のみ選択可能です。1個だけ取る場合は、同じ石を2回クリックしてください。</li>
+           石をクリックして<b>始点</b>を選び、別の石をクリックして<b>終点</b>を選びます。直線上に並んだ石のみ選択可能です。</li>
         <li><b>制限</b>：1ターンに最低1個、最大（段数 - 1）個まで取れます。</li>
-        <li><b>孤立石の判定</b>：隣り合う石がなくなった場合、残りの数から自動的に勝敗を判定します。</li>
-        <li><b>機能</b>：1局につき2回まで「待った」ができます。</li>
       </ol>
     `
   },
@@ -520,6 +553,8 @@ const I18N = {
     status_turn: "ตาของ: {player}",
     status_ai: "🤖 AI กำลังคิด...",
     
+    btn_switch_prefix: "สลับลำดับเล่น",
+
     win_title: "🎉 จบเกม",
     win_msg: "ผู้ชนะคือ: {winner}",
     iso_title: "⚠️ ตัดสินอัตโนมัติ",
@@ -531,10 +566,8 @@ const I18N = {
       <ol>
         <li><b>เป้าหมาย</b>: ผลัดกันหยิบหินออกจากกระดาน จนกว่าจะหมด</li>
         <li><b>วิธีเดินหมาก</b>:
-           คลิกที่หินเพื่อเลือก <b>จุดเริ่มต้น</b> และคลิกอีกก้อนเพื่อเลือก <b>จุดสิ้นสุด</b> (ต้องเป็นเส้นตรงเดียวกัน) หากต้องการหยิบแค่ 1 ก้อน ให้คลิกที่หินเดิมซ้ำ</li>
+           คลิกที่หินเพื่อเลือก <b>จุดเริ่มต้น</b> และคลิกอีกก้อนเพื่อเลือก <b>จุดสิ้นสุด</b> (ต้องเป็นเส้นตรงเดียวกัน)</li>
         <li><b>ข้อจำกัด</b>: หยิบได้อย่างน้อย 1 ก้อน และสูงสุด (จำนวนชั้น - 1) ก้อนต่อตา</li>
-        <li><b>การตัดสินอัตโนมัติ</b>: เมื่อเหลือแต่หินที่ไม่ติดกัน ระบบจะคำนวณผู้ชนะให้ทันที</li>
-        <li><b>ตัวช่วย</b>: สามารถย้อนกลับ (Undo) ได้ 2 ครั้งต่อเกม</li>
       </ol>
     `
   }
@@ -581,10 +614,11 @@ class TriangularNim {
     this.stones = [];
     this.scores = [0, 0];
     this.state = 'menu'; // menu, playing, locked, gameover
+    this.gameStarted = false; // 紀錄是否已執行第一步
     
     this.mode = 'human';
     this.rule = 'lose';
-    this.turn = 0;
+    this.turn = 0; // 0 = Player/P1, 1 = AI/P2
     
     this.selection = { start: null, line: [] };
     this.history = [];
@@ -616,6 +650,7 @@ class TriangularNim {
     this.initStones();
     this.turn = 0;
     this.state = 'playing';
+    this.gameStarted = false; // 重置遊戲開始狀態
     this.history = [];
     this.undoCount = 0;
     this.resetSelection();
@@ -633,6 +668,21 @@ class TriangularNim {
       for (let c = 0; c <= r; c++) {
         this.stones.push({r, c, active: true, x:0, y:0});
       }
+    }
+  }
+
+  // --- 切換先後手 ---
+  toggleTurn() {
+    if (this.gameStarted) return; 
+
+    this.resetSelection();
+    this.turn = 1 - this.turn;
+    this.updateUI();
+
+    // 如果切換後輪到 AI 且不是真人對戰
+    if (this.mode !== 'human' && this.turn === 1) {
+        this.state = 'locked';
+        setTimeout(() => this.runAI(), 500);
     }
   }
 
@@ -792,6 +842,8 @@ class TriangularNim {
   confirmMove() {
     if (this.selection.line.length === 0) return;
 
+    this.gameStarted = true;
+
     this.saveState();
     this.undoCount = 0; 
     this.selection.line.forEach(s => s.active = false);
@@ -919,7 +971,7 @@ class TriangularNim {
     document.getElementById('result-overlay').classList.remove('show');
   }
 
-  // --- AI (增強版: Minimax + Memoization) ---
+  // --- AI (Minimax + Memoization) ---
   getAllMoves(stonesState = null) {
     const moves = [];
     const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
@@ -958,24 +1010,22 @@ class TriangularNim {
     else {
       const activeCount = this.stones.filter(s => s.active).length;
       
-      // [策略 A] 殘局完美運算 (<= 12 顆)
       if (activeCount <= 12) {
         this.memo = new Map();
         this.shuffle(moves);
 
         for (let move of moves) {
           move.forEach(s => s.active = false);
-          const opponentCanWin = this.solveState(); // 檢查對手是否必勝
+          const opponentCanWin = this.solveState(); 
           move.forEach(s => s.active = true);
 
-          if (!opponentCanWin) { // 如果對手無法必勝，這步就是好棋
+          if (!opponentCanWin) { 
             bestMove = move;
             break; 
           }
         }
         if (!bestMove) bestMove = moves[0];
       } 
-      // [策略 B] 開局快速運算
       else {
         this.shuffle(moves); 
         for (let m of moves) {
@@ -996,7 +1046,6 @@ class TriangularNim {
     }, 600);
   }
 
-  // Minimax 求解器
   solveState() {
     const stateKey = this.stones.map(s => s.active ? '1' : '0').join('');
     if (this.memo.has(stateKey)) return this.memo.get(stateKey);
@@ -1067,6 +1116,21 @@ class TriangularNim {
 
     document.getElementById('btn-surrender').innerText = I18N[currLang].surrender;
     document.getElementById('btn-surrender').disabled = !isMyTurn;
+
+    // --- 按鈕更新 (按鈕內顯示文字) ---
+    const turnBtn = document.getElementById('btn-turn');
+    if (this.gameStarted) {
+        turnBtn.classList.add('disabled-visual');
+        turnBtn.disabled = true;
+    } else {
+        turnBtn.classList.remove('disabled-visual');
+        turnBtn.disabled = false;
+    }
+    
+    // 顯示文字：切換先手 (目前: P1/P2/AI)
+    const prefix = I18N[currLang].btn_switch_prefix;
+    const currName = this.getPlayerName(this.turn);
+    turnBtn.innerText = `${prefix} [${currName}]`;
   }
 
   disableControls() {
@@ -1074,6 +1138,10 @@ class TriangularNim {
       document.getElementById('btn-cancel').disabled = true;
       document.getElementById('btn-undo').disabled = true;
       document.getElementById('btn-surrender').disabled = true;
+      
+      const turnBtn = document.getElementById('btn-turn');
+      turnBtn.classList.add('disabled-visual');
+      turnBtn.disabled = true;
   }
 
   updateScoreDisplay() {
