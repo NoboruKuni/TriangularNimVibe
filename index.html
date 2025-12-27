@@ -103,7 +103,7 @@ select {
   flex: 0 0 280px;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* 稍微縮小間距讓版面更緊湊 */
+  gap: 15px;
 }
 
 @media (max-width: 900px) {
@@ -188,7 +188,7 @@ canvas {
   text-align: center;
   border: 1px solid rgba(56, 189, 248, 0.3);
   background: rgba(15, 23, 42, 0.8);
-  padding: 15px; /* 稍微縮小內距 */
+  padding: 15px;
 }
 .rule-title {
   font-size: 0.9rem;
@@ -254,12 +254,12 @@ button.disabled-visual {
 /* 次要按鈕 (空心) */
 .btn-secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
 
-/* 切換按鈕 (特殊樣式：類似次要按鈕，但更明顯是用來切換的) */
+/* 切換按鈕 (特殊樣式) */
 .btn-switch { 
   background: rgba(56, 189, 248, 0.1); 
   border: 1px solid var(--primary); 
   color: var(--primary); 
-  width: 100%; /* 讓它在側邊欄佔滿寬度，比較整齊 */
+  width: 100%; 
   margin-bottom: 5px;
 }
 .btn-switch:hover:not(:disabled) {
@@ -442,7 +442,6 @@ const I18N = {
     status_turn: "輪到：{player}",
     status_ai: "🤖 AI 正在思考...",
     
-    // 按鈕文字 - 格式: 功能名稱 (目前狀態)
     btn_switch_prefix: "切換先手", 
     
     win_title: "🎉 遊戲結束",
@@ -459,6 +458,7 @@ const I18N = {
            點擊一顆棋子作為<b>起點</b>，再點擊另一顆作為<b>終點</b>。兩點之間必須是連續的直線。若只想移除一顆，請點擊同一顆棋子兩次。</li>
         <li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li>
         <li><b>孤立棋子判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li>
+        <li><b>輔助功能</b>：支援每局 2 次悔棋；若局面無望可直接認輸。</li>
       </ol>
     `
   },
@@ -496,6 +496,7 @@ const I18N = {
            Click a stone for <b>Start</b>, then click another for <b>End</b>. Stones must form a continuous line. Click the same stone twice to pick just one.</li>
         <li><b>Limits</b>: Min 1 stone, Max (Rows - 1) stones per turn.</li>
         <li><b>Isolated Stones</b>: System automatically calculates winner when no moves are possible.</li>
+        <li><b>Extras</b>: 2 Undos per game. Surrender button available.</li>
       </ol>
     `
   },
@@ -530,8 +531,10 @@ const I18N = {
       <ol>
         <li><b>目的</b>：交互に石を取り合い、最後の石に関するルールで勝敗を決めます。</li>
         <li><b>操作方法</b>：
-           石をクリックして<b>始点</b>を選び、別の石をクリックして<b>終点</b>を選びます。直線上に並んだ石のみ選択可能です。</li>
+           石をクリックして<b>始点</b>を選び、別の石をクリックして<b>終点</b>を選びます。直線上に並んだ石のみ選択可能です。1個だけ取る場合は、同じ石を2回クリックしてください。</li>
         <li><b>制限</b>：1ターンに最低1個、最大（段数 - 1）個まで取れます。</li>
+        <li><b>孤立石の判定</b>：隣り合う石がなくなった場合、残りの数から自動的に勝敗を判定します。</li>
+        <li><b>機能</b>：1局につき2回まで「待った」ができます。投降も可能です。</li>
       </ol>
     `
   },
@@ -566,8 +569,10 @@ const I18N = {
       <ol>
         <li><b>เป้าหมาย</b>: ผลัดกันหยิบหินออกจากกระดาน จนกว่าจะหมด</li>
         <li><b>วิธีเดินหมาก</b>:
-           คลิกที่หินเพื่อเลือก <b>จุดเริ่มต้น</b> และคลิกอีกก้อนเพื่อเลือก <b>จุดสิ้นสุด</b> (ต้องเป็นเส้นตรงเดียวกัน)</li>
+           คลิกที่หินเพื่อเลือก <b>จุดเริ่มต้น</b> และคลิกอีกก้อนเพื่อเลือก <b>จุดสิ้นสุด</b> (ต้องเป็นเส้นตรงเดียวกัน) หากต้องการหยิบแค่ 1 ก้อน ให้คลิกที่หินเดิมซ้ำ</li>
         <li><b>ข้อจำกัด</b>: หยิบได้อย่างน้อย 1 ก้อน และสูงสุด (จำนวนชั้น - 1) ก้อนต่อตา</li>
+        <li><b>การตัดสินอัตโนมัติ</b>: เมื่อเหลือแต่หินที่ไม่ติดกัน ระบบจะคำนวณผู้ชนะให้ทันที</li>
+        <li><b>ตัวช่วย</b>: สามารถย้อนกลับ (Undo) ได้ 2 ครั้งต่อเกม และมีปุ่มยอมแพ้</li>
       </ol>
     `
   }
