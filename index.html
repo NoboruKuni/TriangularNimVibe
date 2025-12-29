@@ -185,11 +185,85 @@ select {
   gap: 15px;
 }
 
+/* =========================================
+   針對手機版的優化 (Mobile Optimization)
+   ========================================= */
 @media (max-width: 900px) {
-  #game-view { flex-direction: column-reverse; align-items: center; }
-  .side-area { width: 100%; max-width: 500px; }
-  .main-area { width: 100%; }
+  /* 1. 調整整體佈局順序 */
+  #game-view {
+    flex-direction: column; /* 改為垂直排列 */
+    align-items: stretch;   /* 寬度填滿 */
+    padding: 10px;          /* 減少邊距，爭取空間 */
+    padding-bottom: 80px;   /* 底部留白給固定按鈕區 */
+  }
+
+  /* 2. 透過 order 屬性重排視覺順序 (數值越小越上面) */
+  
+  /* [上方] 計分板與狀態資訊 */
+  .side-area {
+    width: 100%;
+    max-width: none;
+    display: flex;       /* 讓內部元件並排顯示 */
+    flex-wrap: wrap;
+    gap: 10px;
+    order: 1;            /* 排在第 1順位 */
+  }
+  
+  /* 針對手機版，讓計分板與規則提示並排顯示，節省高度 */
+  .side-area .panel {
+    flex: 1;             /* 平均分配寬度 */
+    margin-bottom: 0;
+    padding: 10px;       /* 減少內距 */
+    font-size: 0.9rem;   /* 字體稍微縮小 */
+  }
+  
+  /* 隱藏手機版不常用的按鈕區 (例如回選單)，避免佔用上方空間 */
+  /* 我們會把操作按鈕移到下方浮動區 */
+  .side-area .controls {
+    display: none !important; 
+  }
+
+  /* [中間] 棋盤區 */
+  .main-area {
+    width: 100%;
+    order: 2;            /* 排在第 2 順位 */
+    margin-top: 10px;
+  }
+  
+  /* [下方] 狀態文字 (輪到誰/AI思考中) */
+  #status {
+    order: 3;
+    margin: 10px 0;
+  }
+
+  /* 3. [底部固定] 操作按鈕區 (確認/取消/悔棋) */
+  /* 建立一個新的浮動操作列，讓手指最好按 */
+  .mobile-controls-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.95); /* 深色半透明背景 */
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--primary);
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+  }
+  
+  /* 調整原本的 controls 樣式以適應底部 */
+  .main-area .controls {
+    display: none; /* 隱藏原本跟隨棋盤的按鈕，改用下方固定欄 */
+  }
 }
+
+/* 預設隱藏手機專用控制列 (電腦版不顯示) */
+.mobile-controls-bar { display: none; }
+@media (max-width: 900px) { .mobile-controls-bar { display: flex; } }
+
 
 /* =========================================
    5. 畫布與互動層 (Canvas & Overlay)
@@ -488,6 +562,19 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
       <button class="btn-secondary" onclick="game.backToMenu()" data-i18n="back">回選單</button>
     </div>
   </div>
+</div>
+
+<div class="mobile-controls-bar">
+  <button onclick="game.undo()" class="btn-warn" style="flex:0 0 50px; padding:0;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 14L4 9l5-5"/>
+      <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+    </svg>
+  </button>
+  
+  <button onclick="game.resetSelection()" class="btn-secondary" style="flex:1;" data-i18n="cancel">重選</button>
+  
+  <button onclick="game.confirmMove()" style="flex:2;" data-i18n="confirm">確認下子</button>
 </div>
 
 <script>
