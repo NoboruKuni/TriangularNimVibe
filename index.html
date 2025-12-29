@@ -829,6 +829,7 @@ class TriangularNim {
   }
 
   startNewRound() {
+    // ... 原本的代碼 ...
     this.initStones();
     this.turn = 0;
     this.state = 'playing';
@@ -837,9 +838,12 @@ class TriangularNim {
     this.undoCount = 0;
     this.resetSelection();
     this.hideBanner(); 
-    requestAnimationFrame(() => { this.resize(); this.updateUI(); });
-  }
+    
+    // 新增：顯示手機工具列
+    document.getElementById('mobile-bar').classList.remove('hidden');
 
+    requestAnimationFrame(() => { this.resize(); this.updateUI(); });
+}
   initStones() {
     this.stones = [];
     // 建立基本的三角形排列
@@ -1166,27 +1170,56 @@ class TriangularNim {
     document.getElementById('p1-name').innerText = this.getPlayerName(0);
     document.getElementById('p2-name').innerText = this.getPlayerName(1);
     document.getElementById('rule-hint').innerText = I18N[currLang][this.rule === 'lose' ? 'rule_lose' : 'rule_win'];
+    
     if (this.state !== 'gameover') {
         const isAi = (this.mode !== 'human' && this.turn === 1);
         const txt = isAi ? I18N[currLang].status_ai : I18N[currLang].status_turn.replace('{player}', this.getPlayerName(this.turn));
         const el = document.getElementById('status'); el.innerText = txt; el.style.color = isAi ? '#facc15' : '#f8fafc';
     }
+    
     document.getElementById('p1-score-row').classList.toggle('active', this.turn === 0);
     document.getElementById('p2-score-row').classList.toggle('active', this.turn === 1);
+
+    // --- 按鈕狀態邏輯 (同時更新 電腦版 與 手機版) ---
     const hasSel = this.selection.line.length > 0;
     const isMyTurn = (this.state === 'playing') && (this.mode === 'human' || this.turn === 0);
-    document.getElementById('btn-confirm').disabled = !(hasSel && isMyTurn);
-    document.getElementById('btn-cancel').disabled = !(hasSel && isMyTurn);
+    const canUndo = (this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn);
+
+    // 1. 確認與取消
+    const confirmDisabled = !(hasSel && isMyTurn);
+    document.getElementById('btn-confirm').disabled = confirmDisabled;
+    document.getElementById('btn-cancel').disabled = confirmDisabled;
+    
+    // 手機版同步
+    document.getElementById('m-btn-confirm').disabled = confirmDisabled;
+    document.getElementById('m-btn-cancel').disabled = confirmDisabled;
+
+    // 2. 悔棋
     const undoBtn = document.getElementById('btn-undo');
     undoBtn.innerText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
-    undoBtn.disabled = !(this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn);
+    undoBtn.disabled = !canUndo;
+    // 手機版同步
+    document.getElementById('m-btn-undo').disabled = !canUndo;
+
+    // 3. 認輸
     document.getElementById('btn-surrender').innerText = I18N[currLang].surrender;
     document.getElementById('btn-surrender').disabled = !isMyTurn;
+    // 手機版同步
+    document.getElementById('m-btn-surrender').disabled = !isMyTurn;
+
+    // 4. 切換先手 (遊戲開始後隱藏/禁用)
     const turnBtn = document.getElementById('btn-turn');
-    if (this.gameStarted) { turnBtn.classList.add('disabled-visual'); turnBtn.disabled = true; } 
-    else { turnBtn.classList.remove('disabled-visual'); turnBtn.disabled = false; }
+    if (this.gameStarted) { 
+        turnBtn.classList.add('disabled-visual'); turnBtn.disabled = true; 
+        // 手機版：遊戲開始後直接隱藏切換按鈕，節省空間
+        document.getElementById('m-btn-turn').style.display = 'none';
+    } else { 
+        turnBtn.classList.remove('disabled-visual'); turnBtn.disabled = false; 
+        // 手機版：顯示
+        document.getElementById('m-btn-turn').style.display = 'flex';
+    }
     turnBtn.innerText = `${I18N[currLang].btn_switch_prefix} [${this.getPlayerName(1 - this.turn)}]`;
-  }
+}
 
   updateScoreDisplay() { document.getElementById('p1-score').innerText = this.scores[0]; document.getElementById('p2-score').innerText = this.scores[1]; }
   
@@ -1197,7 +1230,14 @@ class TriangularNim {
   }
   
   resetSelection() { this.selection = { start: null, line: [] }; this.draw(); this.updateUI(); }
-  backToMenu() { this.state = 'menu'; document.getElementById('game-view').classList.add('hidden'); document.getElementById('menu-container').classList.remove('hidden'); }
+  backToMenu() { 
+    this.state = 'menu'; 
+    document.getElementById('game-view').classList.add('hidden'); 
+    document.getElementById('menu-container').classList.remove('hidden'); 
+    
+    // 新增：隱藏手機工具列
+    document.getElementById('mobile-bar').classList.add('hidden');
+}
   restart() { this.startNewRound(); }
   disableControls() { document.getElementById('btn-confirm').disabled = true; document.getElementById('btn-cancel').disabled = true; }
 }
