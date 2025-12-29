@@ -190,36 +190,81 @@ select {
    ========================================= */
 /* 手機版專用樣式 */
 @media (max-width: 900px) {
-  /* 遊戲畫面佈局調整 */
+  /* 1. 遊戲容器：撐滿寬度，底部留白 */
   #game-view {
     flex-direction: column;
-    padding: 10px;
-    padding-bottom: 90px; /* 留給底部工具列的空間 */
+    padding: 0;
+    padding-bottom: 80px; /* 避開底部工具列 */
+    width: 100vw;
+    overflow-x: hidden;
   }
 
-  /* 上方資訊區並排 */
+  /* 2. 棋盤區：移除邊距，讓棋子最大化 */
+  .main-area {
+    width: 100%;
+    order: 2;
+    margin: 0;
+  }
+  .canvas-container {
+    width: 100%;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  canvas {
+    width: 100% !important;
+    border-radius: 0;
+  }
+
+  /* 3. [操作區]：確認與重選 (放在棋盤正下方) */
+  .main-area .action-controls {
+    display: flex !important; /* 確保顯示 */
+    width: 100%;
+    padding: 10px 15px;       
+    box-sizing: border-box;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6); 
+  }
+  
+  /* 重選按鈕 */
+  #btn-cancel {
+    flex: 1;
+    height: 54px;
+    font-size: 1rem;
+    border-color: rgba(255,255,255,0.2);
+    color: #cbd5e1;
+  }
+  
+  /* 確認按鈕 */
+  #btn-confirm {
+    flex: 2;
+    height: 54px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+  }
+
+  /* 4. 上方資訊區 (計分板) */
   .side-area {
     width: 100%;
     display: flex;
-    gap: 8px;
-    order: 1; /* 置頂 */
+    gap: 4px;
+    padding: 4px;
+    box-sizing: border-box;
+    order: 1;
   }
   .side-area .panel {
     flex: 1;
     margin: 0;
-    padding: 10px;
+    padding: 6px;
+    font-size: 0.85rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  
-  /* 隱藏手機版側邊欄原本的按鈕區 */
   .side-area .controls { display: none !important; }
-  
-  .main-area { width: 100%; order: 2; margin-top: 5px; }
-  #status { order: 3; margin: 5px 0; font-size: 1.1rem; }
+  #status { order: 3; margin: 0; padding: 5px; font-size: 1rem; }
 
-  /* 底部固定工具列 */
+  /* 5. 底部固定工具列 (5顆按鈕均分對齊) */
   .mobile-controls-bar {
     position: fixed;
     bottom: 0; left: 0; width: 100%;
@@ -231,37 +276,23 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px; /* 稍微減少左右內距，爭取空間 */
+    padding: 0 8px;
     box-sizing: border-box;
-    gap: 6px;       /* 間距縮小，以容納 5 顆 */
+    gap: 6px; 
   }
   
-  /* 隱藏狀態 (JS控制) */
   .mobile-controls-bar.hidden { display: none !important; }
 
-  /* 左側系統區 */
-  .m-group-sys { display: flex; gap: 5px; }
-  
-  /* 分隔線 */
-  .m-divider {
-    width: 1px; height: 30px;
-    background: rgba(255,255,255,0.2);
-    margin: 0 5px;
-  }
-
-  /* 右側動作區 */
-  .m-group-act { display: flex; gap: 8px; flex: 1; justify-content: flex-end; }
-
-/* 工具列圖示按鈕 */
+  /* 工具列圖示按鈕 - 通用設定 */
   .btn-icon {
-    flex: 1;             /* 強制平分寬度 */
-    min-width: 0;        /* 防止內容撐開 */
+    flex: 1;             /* 強制寬度均分 */
+    min-width: 0;        /* 防止撐開 */
     height: 48px;        /* 固定高度 */
-    margin: 0;           /* 關鍵：消除預設邊距，解決偏上問題 */
-    padding: 0;          /* 確保沒有內距影響 */
+    margin: 0 !important;/* 【關鍵修正】強制覆蓋全域樣式，解決切換先手按鈕偏上問題 */
+    padding: 0;
     
-    display: flex;       /* 讓內部 SVG 絕對置中 */
-    align-items: center; 
+    display: flex;
+    align-items: center;
     justify-content: center;
     
     border-radius: 10px;
@@ -271,17 +302,16 @@ select {
     transition: all 0.2s;
   }
   
+  /* 確保 SVG 尺寸一致且置中 */
   .btn-icon svg {
     width: 24px;
     height: 24px;
-    display: block;      /* 消除行高影響 */
-    margin: auto;        /* 確保在 Flex 容器內置中 */
+    display: block;
+    margin: auto;
   }
 
-  /* 按下效果 */
+  /* 按下與禁用效果 */
   .btn-icon:active:not(:disabled) { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-  
-  /* 禁用狀態 (暗淡變色，不消失) */
   .btn-icon:disabled {
     opacity: 0.3;
     filter: grayscale(1);
@@ -290,10 +320,10 @@ select {
     border-color: rgba(255,255,255,0.05);
   }
 
-  /* 顏色微調 */
-  .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
-  .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
-  .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
+  /* 顏色微調 - 確保 .btn-switch 這裡的設定權重夠高 */
+  .mobile-controls-bar .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
+  .mobile-controls-bar .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
+  .mobile-controls-bar .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
 }
 
 /* 電腦版預設隱藏 */
