@@ -6,17 +6,17 @@
 <title>三角難題 (Triangular Nim)</title>
 <style>
 /* =========================================
-   CSS: 霓虹暗色風格 (Neon Dark Theme)
+   1. CSS 變數與全域設定 (Global Styles)
    ========================================= */
 :root {
-  --bg-gradient: linear-gradient(135deg, #0f172a, #020617);
-  --panel-bg: rgba(255, 255, 255, 0.06);
-  --primary: #38bdf8;
-  --accent: #facc15;
-  --text: #f1f5f9;
-  --danger: #ef4444;
-  --warn: #f97316;
-  --disabled: #475569;
+  --bg-gradient: linear-gradient(135deg, #0f172a, #020617); /* 深色背景漸層 */
+  --panel-bg: rgba(255, 255, 255, 0.06); /* 半透明面板背景 */
+  --primary: #38bdf8; /* 標準版主色 (藍) */
+  --accent: #facc15;  /* 강조色 (黃) */
+  --text: #f1f5f9;    /* 主要文字色 */
+  --danger: #ef4444;  /* 危險/認輸色 (紅) */
+  --warn: #f97316;    /* 警告色 (橘) */
+  --disabled: #475569;/* 禁用色 (灰) */
 }
 
 body {
@@ -26,11 +26,13 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-  touch-action: manipulation;
+  touch-action: manipulation; /* 優化觸控反應 */
 }
 
+/* 通用工具類 */
 .hidden { display: none !important; }
 
+/* 標題樣式 - 支援漸層文字 */
 h1 {
   text-align: center;
   font-size: clamp(1.8rem, 5vw, 2.5rem);
@@ -44,6 +46,7 @@ h1 {
   transition: all 0.5s ease;
 }
 
+/* 專家模式標題樣式 (紫色系) */
 h1.pro-active {
   background: linear-gradient(to right, #c084fc, #facc15);
   -webkit-background-clip: text;
@@ -51,6 +54,9 @@ h1.pro-active {
   text-shadow: 0 0 25px rgba(192, 132, 252, 0.5);
 }
 
+/* =========================================
+   2. 選單與頁面切換 (Menu Slider)
+   ========================================= */
 #menu-container {
   max-width: 550px;
   margin: 0 auto;
@@ -64,7 +70,7 @@ h1.pro-active {
 
 #slider-track {
   display: flex;
-  width: 200%;
+  width: 200%; /* 兩個頁面寬度 */
   transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -79,6 +85,9 @@ h1.pro-active {
   opacity: 1;
 }
 
+/* =========================================
+   3. 面板與控制元件 (Panels & Controls)
+   ========================================= */
 .panel {
   background: var(--panel-bg);
   padding: 24px;
@@ -96,6 +105,7 @@ h1.pro-active {
   margin-bottom: 8px;
 }
 
+/* 模式切換開關 (標準/專家) */
 .panel .edition-toggle {
   display: inline-flex;
   width: auto;
@@ -127,6 +137,7 @@ h1.pro-active {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* 專家模式的主色調覆寫 */
 .pro-theme { --primary: #c084fc; --accent: #facc15; }
 .pro-theme .toggle-btn.active { background: var(--accent); color: #4a044e; }
 
@@ -144,6 +155,9 @@ select {
   cursor: pointer;
 }
 
+/* =========================================
+   4. 遊戲畫面佈局 (Game View Layout)
+   ========================================= */
 #game-view {
   display: flex;
   justify-content: center;
@@ -177,6 +191,9 @@ select {
   .main-area { width: 100%; }
 }
 
+/* =========================================
+   5. 畫布與互動層 (Canvas & Overlay)
+   ========================================= */
 .canvas-container {
   position: relative;
   width: 100%;
@@ -194,6 +211,7 @@ canvas {
   touch-action: none;
 }
 
+/* 結算畫面遮罩 */
 #result-overlay {
   position: absolute;
   top: 50%;
@@ -217,6 +235,9 @@ canvas {
 .result-title { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
 .result-desc { font-size: 1.1rem; color: #fff; line-height: 1.5; }
 
+/* =========================================
+   6. 按鈕樣式 (Buttons)
+   ========================================= */
 button {
   font-size: 1rem;
   padding: 10px 16px;
@@ -242,6 +263,7 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 .btn-danger { background: var(--danger); color: white; }
 .btn-warn { background: var(--warn); color: #0f172a; }
 
+/* 語言切換按鈕區 */
 .lang-switch {
   display: flex;
   justify-content: center;
@@ -268,6 +290,9 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 .pro-theme .lang-btn:hover { background: rgba(192, 132, 252, 0.1); }
 .pro-theme .lang-btn.active { background: var(--accent); color: #4a044e; border-color: var(--accent); font-weight: bold; box-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
 
+/* =========================================
+   7. 規則說明與計分板 (Rules & Scoreboard)
+   ========================================= */
 .rule-box {
   margin-top: 15px;
   max-height: none;
@@ -279,10 +304,14 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
   box-sizing: border-box;
 }
 .rule-box h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: var(--primary); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-#howto-text { font-size: 0.95rem; line-height: 1.7; color: #cbd5e1; text-align: left; }
-#howto-text ol { padding-left: 20px; margin: 0; }
-#howto-text li { margin-bottom: 8px; padding-left: 5px; }
-#howto-text b { color: var(--accent); }
+.howto-content { font-size: 0.95rem; line-height: 1.7; color: #cbd5e1; text-align: left; }
+.howto-content ol { padding-left: 20px; margin: 0; }
+.howto-content li { margin-bottom: 8px; padding-left: 5px; }
+.howto-content b { color: var(--accent); }
+
+/* 色彩強調文字 (用於進階規則) */
+.highlight-orange { color: #f97316; font-weight: bold; text-shadow: 0 0 5px rgba(249, 115, 22, 0.4); }
+.highlight-blue { color: #38bdf8; font-weight: bold; text-shadow: 0 0 5px rgba(56, 189, 248, 0.4); }
 
 .scoreboard { text-align: center; }
 .score-item { display: flex; justify-content: space-between; padding: 12px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -305,10 +334,10 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
         <div class="panel">
           <label>
             <div class="panel-header">
-              <span data-i18n="opponent">對手</span>
+              <span data-i18n="opponent">對戰形式</span>
               <div class="edition-toggle">
-                <div class="toggle-btn active" onclick="switchEdition('std')" data-i18n="btn_std">標準版</div>
-                <div class="toggle-btn" onclick="switchEdition('pro')" data-i18n="btn_pro">專業版</div>
+                <div class="toggle-btn active" onclick="switchEdition('std')" data-i18n="btn_std">標準模式</div>
+                <div class="toggle-btn" onclick="switchEdition('pro')" data-i18n="btn_pro">專家模式</div>
               </div>
             </div>
             <select id="setting-mode">
@@ -351,7 +380,7 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 
         <div class="rule-box">
            <h3 data-i18n="howto_title">玩法說明</h3>
-           <div id="howto-text"></div>
+           <div id="howto-text" class="howto-content"></div>
         </div>
       </div>
 
@@ -359,10 +388,10 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
         <div class="panel">
           <label>
             <div class="panel-header">
-              <span data-i18n="opponent">對手</span>
+              <span data-i18n="opponent">對戰形式</span>
               <div class="edition-toggle">
-                <div class="toggle-btn" onclick="switchEdition('std')" data-i18n="btn_std">標準版</div>
-                <div class="toggle-btn active" onclick="switchEdition('pro')" data-i18n="btn_pro">專業版</div>
+                <div class="toggle-btn" onclick="switchEdition('std')" data-i18n="btn_std">標準模式</div>
+                <div class="toggle-btn active" onclick="switchEdition('pro')" data-i18n="btn_pro">專家模式</div>
               </div>
             </div>
             <select id="setting-mode-pro">
@@ -384,19 +413,11 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
             <span data-i18n="board_select">棋盤選擇</span>
             <select id="setting-board-select">
               <option value="iron_heart">鋼鐵之心 (Iron Heart)</option>
-              <option value="honeycomb">蜂巢 (Honeycomb)</option>
-              <option value="sky_corridor">空中走廊 (Sky Corridor)</option>
-              <option value="hourglass">沙漏 (The Hourglass)</option>
-              <option value="boomerang">迴力鏢 (Boomerang)</option>
-              <option value="donut">甜甜圈 (The Donut)</option>
-              <option value="bridge">斷橋 (Broken Bridge)</option>
-              <option value="tetris">俄羅斯方塊 (Tetris)</option>
-              <option value="ruins">遺跡</option>
-            </select>
+              </select>
           </label>
 
           <div class="controls">
-            <button class="start-btn" onclick="game.startPro()" style="background:var(--accent); color:#4a044e;" data-i18n="startChallenge">進入挑戰</button>
+            <button class="start-btn" onclick="game.startPro()" style="background:var(--accent); color:#4a044e;" data-i18n="startChallenge">開始挑戰</button>
           </div>
 
           <div class="lang-switch">
@@ -407,9 +428,9 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
           </div>
         </div>
 
-        <div class="rule-box" style="border: 1px solid var(--primary);">
+        <div class="rule-box">
            <h3 data-i18n="howto_title_pro">進階規則</h3>
-           <div id="howto-text-pro" style="color: #cbd5e1; line-height: 1.6;"></div>
+           <div id="howto-text-pro" class="howto-content"></div>
         </div>
       </div>
     </div>
@@ -462,27 +483,31 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 </div>
 
 <script>
+/* =========================================
+   1. 多語言翻譯資料庫 (I18N)
+   ========================================= */
 const I18N = {
   zh: {
     title: "三角難題", title_pro: "三角難題 專家模式", board_select: "棋盤選擇：", 
-    btn_std: "標準模式", btn_pro: "專家模式", opponent: "對手設定：", rule: "勝負規則：", size: "棋盤層數：",
+    btn_std: "標準模式", btn_pro: "專家模式", opponent: "對戰形式：", rule: "勝負規則：", size: "棋盤層數：",
     size_suffix: "層", human: "真人對戰", ai_normal: "強 AI", ai_easy: "弱 AI",
     map_iron: "鋼鐵之心", map_honey: "蜂巢", map_sky: "空中走廊", map_hourglass: "沙漏",
     map_boomerang: "迴力鏢", map_donut: "甜甜圈", map_bridge: "斷橋", map_tetris: "俄羅斯方塊", map_ruins: "遺跡",
     name_p1: "玩家一", name_p2: "玩家二", name_human: "人類", name_ai_strong: "強 AI", name_ai_weak: "弱 AI",
     rule_title_short: "當前規則", rule_lose: "拿到最後一顆的人【輸】", rule_win: "拿到最後一顆的人【贏】",
-    start: "開始遊戲", startChallenge: "進入挑戰", confirm: "確認下子", cancel: "重選", undo: "悔棋 ({n})", surrender: "認輸",
+    start: "開始遊戲", startChallenge: "開始挑戰", confirm: "確認下子", cancel: "重選", undo: "悔棋 ({n})", surrender: "認輸",
     restart: "再來一局", back: "回選單", scoreboard: "計分板", howto_title: "詳細規則", howto_title_pro: "進階規則",
     status_turn: "輪到：{player}", status_ai: "🤖 AI 正在思考...", btn_switch_prefix: "切換先手", 
     win_title: "🎉 遊戲結束", win_msg: "{winner} 獲勝！",
     iso_title: "⚠️ 孤立棋判定", iso_msg: "盤面只剩孤立棋子 (剩 {c} 顆)。\n根據規則，獲勝者是：\n{winner}",
     surrender_title: "🏳️ 投降", surrender_msg: "{loser} 選擇認輸。\n恭喜 {winner} 獲勝！",
     howto: `<ol><li><b>遊戲目標</b>：兩名玩家輪流從棋盤上移除棋子，直到沒有棋子可拿。</li><li><b>移除棋子</b>：點擊棋子選擇欲移除的起點及終點。兩點之間必須是連續的直線，不能跳過空格。</li><li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li><li><b>勝負判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li><li><b>輔助功能</b>：每局遊戲開始前可切換先手，遊戲中最多可連續做 2 次悔棋。</li></ol>`,
-    howto_pro: `【二階棋子 (Level 2)】<br>盤面上 <b>橘色</b> 的棋子為「二階棋子」。<br>第一次消除時，它會 <b>降階</b> 變為藍色棋子，而不會消失。<br>再次消除藍色棋子，才會將其移出棋盤。<br><br>【勝負判定：權重總和】<br>當盤面剩下不連續的孤立棋子時，系統將依據 <b>剩餘強制步數</b> 判定勝負：<br>藍色 = 1 步，橘色 = 2 步。`
+    // 修改：將標題用 <b> 包覆，使其變黃
+    howto_pro: `<b>【二階棋子 (Level 2)】</b><br>盤面上 <span class="highlight-orange">橘色</span> 的棋子為「二階棋子」。<br>第一次消除時，它會 <b>降階</b> 變為 <span class="highlight-blue">藍色</span> 棋子，而不會消失。<br>再次消除藍色棋子，才會將其移出棋盤。<br><br><b>【勝負判定：權重總和】</b><br>當盤面剩下不連續的孤立棋子時，系統將依據 <b>剩餘強制步數</b> 判定勝負：<br><span class="highlight-blue">藍色</span> = 1 步，<span class="highlight-orange">橘色</span> = 2 步。`
   },
   en: {
     title: "Triangular Nim", title_pro: "Triangular Nim PRO", board_select: "Board Select:",
-    btn_std: "Standard Mode", btn_pro: "Expert Mode", opponent: "Opponent:", rule: "Winning Rule:", size: "Board Size:",
+    btn_std: "Standard Mode", btn_pro: "Pro Mode", opponent: "Match Type:", rule: "Winning Rule:", size: "Board Size:",
     size_suffix: "Rows", human: "PvP (Local)", ai_normal: "Strong AI", ai_easy: "Weak AI",
     map_iron: "Iron Heart", map_honey: "Honeycomb", map_sky: "Sky Corridor", map_hourglass: "The Hourglass",
     map_boomerang: "Boomerang", map_donut: "The Donut", map_bridge: "Broken Bridge", map_tetris: "Tetris", map_ruins: "Ruins",
@@ -495,11 +520,12 @@ const I18N = {
     iso_title: "⚠️ Auto-Resolution", iso_msg: "Only isolated stones remain ({c} left).\nBased on the rule, the winner is:\n{winner}",
     surrender_title: "🏳️ Surrender", surrender_msg: "{loser} has surrendered.\n{winner} Wins!",
     howto: `<ol><li><b>Goal</b>: Two players take turns removing stones until none are left.</li><li><b>Remove</b>: Click to select Start and End stones. The line must be continuous and cannot skip empty spaces.</li><li><b>Limits</b>: Take at least 1 stone, max (Rows - 1) stones per turn.</li><li><b>Winning</b>: System automatically decides the winner when no adjacent stones remain.</li><li><b>Features</b>: Toggle turn order before game; max 2 consecutive undos allowed.</li></ol>`,
-    howto_pro: `【Level 2 Stones】<br><b>Orange</b> stones are "Level 2".<br>Taking them once <b>downgrades</b> them to Blue (Level 1) instead of removing them.<br>Taking Blue stones removes them from the board.<br><br>【Winning Condition: Weighted Sum】<br>When only isolated stones remain, the winner is decided by <b>Remaining Forced Moves</b>:<br>Blue = 1 Move, Orange = 2 Moves.`
+    // Modified: Wrapped titles in <b> for yellow color
+    howto_pro: `<b>【Level 2 Stones】</b><br><span class="highlight-orange">Orange</span> stones are "Level 2".<br>Taking them once <b>downgrades</b> them to <span class="highlight-blue">Blue</span> (Level 1) instead of removing them.<br>Taking Blue stones removes them from the board.<br><br><b>【Winning Condition】</b><br>When only isolated stones remain, the winner is decided by <b>Remaining Forced Moves</b>:<br><span class="highlight-blue">Blue</span> = 1 Move, <span class="highlight-orange">Orange</span> = 2 Moves.`
   },
   ja: {
     title: "三角ニム", title_pro: "三角ニム プロモード", board_select: "盤面選択：",
-    btn_std: "標準モード", btn_pro: "プロモード", opponent: "対戦相手：", rule: "勝敗ルール：", size: "盤面のサイズ：",
+    btn_std: "標準モード", btn_pro: "プロモード", opponent: "対戦形式：", rule: "勝敗ルール：", size: "盤面のサイズ：",
     size_suffix: "段", human: "二人対戦", ai_normal: "強いAI", ai_easy: "弱いAI",
     map_iron: "アイアンハート", map_honey: "ハニカム", map_sky: "天空の回廊", map_hourglass: "砂時計",
     map_boomerang: "ブーメラン", map_donut: "ドーナツ", map_bridge: "壊れた橋", map_tetris: "テトリス", map_ruins: "遺跡",
@@ -512,11 +538,12 @@ const I18N = {
     iso_title: "⚠️ 自動判定", iso_msg: "孤立した石のみ残りました（残り{c}個）。\nルールに基づき判定します：\n勝者：{winner}",
     surrender_title: "🏳️ 投降", surrender_msg: "{loser} が降参しました。\n勝者：{winner}！",
     howto: `<ol><li><b>目的</b>：交互に石を取り合い、なくなるまで続けます。</li><li><b>石を取る</b>：始点と終点を選択します。間の石は連続している必要があり、空きスペースは飛ばせません。</li><li><b>制限</b>：1回につき1個から（段数-1）個まで取れます。</li><li><b>勝敗判定</b>：隣り合う石がなくなると、自動的に勝敗が判定されます。</li><li><b>機能</b>：開始前に先攻切替可。待ったは連続2回まで。</li></ol>`,
-    howto_pro: `【レベル2の石】<br><b>オレンジ</b>の石は「レベル2」です。<br>一度取ると、消滅せずに青色（レベル1）に<b>ランクダウン</b>します。<br>青色の石を取ると、盤上から取り除かれます。<br><br>【勝敗判定：重み付け総和】<br>孤立した石のみになった場合、<b>残りの強制手数</b>に基づいて勝敗を判定します：<br>青 = 1手、オレンジ = 2手。`
+    // Modified: Wrapped titles in <b> for yellow color
+    howto_pro: `<b>【レベル2の石】</b><br><span class="highlight-orange">オレンジ</span>の石は「レベル2」です。<br>一度取ると、消滅せずに<span class="highlight-blue">青色</span>（レベル1）に<b>ランクダウン</b>します。<br>青色の石を取ると、盤上から取り除かれます。<br><br><b>【勝敗判定：重み付け総和】</b><br>孤立した石のみになった場合、<b>残りの強制手数</b>に基づいて勝敗を判定します：<br><span class="highlight-blue">青</span> = 1手、<span class="highlight-orange">オレンジ</span> = 2手。`
   },
   th: {
-    title: "เกมกลยุทธ์สามเหลี่ยม", title_pro: "เกมกลยุทธ์สามเหลี่ยม โปร", board_select: "เลือกกระดาน:",
-    btn_std: "โหมดมาตรฐาน", btn_pro: "โหมดโปร", opponent: "คู่ต่อสู้:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
+    title: "เกมกลยุทธ์สามเหลี่ยม", title_pro: "โหมดโปร", board_select: "เลือกกระดาน:",
+    btn_std: "โหมดมาตรฐาน", btn_pro: "โหมดโปร", opponent: "รูปแบบการเล่น:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
     size_suffix: "ชั้น", human: "เล่น 2 คน", ai_normal: "AI เก่ง", ai_easy: "AI ง่าย",
     map_iron: "หัวใจเหล็ก", map_honey: "รังผึ้ง", map_sky: "ระเบียงลอยฟ้า", map_hourglass: "นาฬิกาทราย",
     map_boomerang: "บูมเมอแรง", map_donut: "โดนัท", map_bridge: "สะพานขาด", map_tetris: "เตตริส", map_ruins: "ซากปรักหักพัง",
@@ -529,19 +556,25 @@ const I18N = {
     iso_title: "⚠️ ตัดสินอัตโนมัติ", iso_msg: "เหลือเพียงหินที่แยกตัว ({c} ก้อน)\nระบบคำนวณผลแพ้ชนะอัตโนมัติ:\nผู้ชนะ: {winner}",
     surrender_title: "🏳️ ยอมแพ้", surrender_msg: "{loser} ยอมแพ้แล้ว\nยินดีด้วย {winner} ชนะ!",
     howto: `<ol><li><b>เป้าหมาย</b>: ผลัดกันหยิบหินจนหมดกระดาน</li><li><b>วิธีหยิบ</b>: เลือกจุดเริ่มต้นและสิ้นสุด ต้องเป็นเส้นตรงต่อเนื่อง ห้ามข้ามช่องว่าง</li><li><b>ข้อจำกัด</b>: หยิบ 1 ถึง (จำนวนชั้น - 1) ก้อนต่อตา</li><li><b>ตัดสิน</b>: ระบบตัดสินผู้ชนะทันทีเมื่อไม่มีหินติดกัน</li><li><b>ฟีเจอร์</b>: สลับคนเริ่มก่อนได้ และย้อนกลับได้ 2 ครั้ง</li></ol>`,
-    howto_pro: `【หินระดับ 2】<br>หินสี<b>ส้ม</b> คือ "หินระดับ 2"<br>เมื่อถูกหยิบครั้งแรก จะ<b>ลดระดับ</b>กลายเป็นสีฟ้า (ไม่หายไป)<br>ต้องหยิบตอนเป็นสีฟ้าอีกครั้งถึงจะออกจากกระดาน<br><br>【การตัดสินแพ้ชนะ】<br>เมื่อเหลือแต่หินที่แยกตัว ระบบจะตัดสินจาก <b>จำนวนตาเดินที่บังคับเหลืออยู่</b>:<br>สีฟ้า = 1 ตา, สีส้ม = 2 ตา`
+    // Modified: Wrapped titles in <b> for yellow color
+    howto_pro: `<b>【หินระดับ 2】</b><br>หินสี<span class="highlight-orange">ส้ม</span> คือ "หินระดับ 2"<br>เมื่อถูกหยิบครั้งแรก จะ<b>ลดระดับ</b>กลายเป็นสี<span class="highlight-blue">ฟ้า</span> (ไม่หายไป)<br>ต้องหยิบตอนเป็นสีฟ้าอีกครั้งถึงจะออกจากกระดาน<br><br><b>【การตัดสินแพ้ชนะ】</b><br>เมื่อเหลือแต่หินที่แยกตัว ระบบจะตัดสินจาก <b>จำนวนตาเดินที่บังคับเหลืออยู่</b>:<br>สี<span class="highlight-blue">ฟ้า</span> = 1 ตา, สี<span class="highlight-orange">ส้ม</span> = 2 ตา`
   }
 };
 
 let currLang = 'zh';
 
+/* =========================================
+   2. 語言切換與 UI 更新函式
+   ========================================= */
 function setLang(lang) {
   currLang = lang;
+  // 更新所有帶有 data-i18n 屬性的文字
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
   });
   
+  // 更新下拉選單選項 (棋盤選擇)
   const boardSelect = document.getElementById('setting-board-select');
   if (boardSelect) {
       const keys = ['map_iron', 'map_honey', 'map_sky', 'map_hourglass', 'map_boomerang', 'map_donut', 'map_bridge', 'map_tetris', 'map_ruins'];
@@ -550,16 +583,19 @@ function setLang(lang) {
       });
   }
 
+  // 更新下拉選單選項 (尺寸)
   const sizeSelect = document.getElementById('setting-size');
   if(sizeSelect) {
       Array.from(sizeSelect.options).forEach(opt => opt.text = `${opt.value} ${I18N[lang].size_suffix}`);
   }
 
+  // 更新規則說明 HTML
   const stdRule = document.getElementById('howto-text');
   if (stdRule) stdRule.innerHTML = I18N[lang].howto;
   const proRule = document.getElementById('howto-text-pro');
   if (proRule) proRule.innerHTML = I18N[lang].howto_pro;
   
+  // 更新語言按鈕狀態
   document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
   const langMap = { 'zh':0, 'en':1, 'ja':2, 'th':3 };
   document.querySelectorAll('.lang-switch').forEach(container => {
@@ -567,9 +603,13 @@ function setLang(lang) {
       if (btns[langMap[lang]]) btns[langMap[lang]].classList.add('active');
   });
 
+  // 若遊戲正在進行中，同步更新遊戲內文字
   if (game && game.state !== 'menu') game.updateUI();
 }
 
+/* =========================================
+   3. 標準模式/專家模式 切換邏輯
+   ========================================= */
 function switchEdition(edition) {
   const track = document.getElementById('slider-track');
   const pageStd = document.getElementById('menu-std');
@@ -578,6 +618,7 @@ function switchEdition(edition) {
   const allToggles = document.querySelectorAll('.edition-toggle');
 
   if (edition === 'std') {
+    // 切換到標準模式
     track.style.transform = 'translateX(0)';
     pageStd.classList.add('active-page'); pagePro.classList.remove('active-page');
     titleEl.classList.remove('pro-active'); titleEl.dataset.i18n = 'title';
@@ -586,6 +627,7 @@ function switchEdition(edition) {
       if(btns.length >= 2) { btns[0].classList.add('active'); btns[1].classList.remove('active'); }
     });
   } else {
+    // 切換到專家模式
     track.style.transform = 'translateX(-50%)';
     pagePro.classList.add('active-page'); pageStd.classList.remove('active-page');
     titleEl.classList.add('pro-active'); titleEl.dataset.i18n = 'title_pro';
@@ -594,9 +636,12 @@ function switchEdition(edition) {
       if(btns.length >= 2) { btns[0].classList.remove('active'); btns[1].classList.add('active'); }
     });
   }
-  setLang(currLang);
+  setLang(currLang); // 重新套用語言以更新標題
 }
 
+/* =========================================
+   4. 遊戲核心邏輯類別 (Game Class)
+   ========================================= */
 class TriangularNim {
   constructor() {
     this.canvas = document.getElementById('board');
@@ -615,9 +660,11 @@ class TriangularNim {
     this.MAX_UNDO = 2;
     this.memo = new Map();
     this.bindEvents();
+    // 視窗縮放時重新計算畫布
     window.addEventListener('resize', () => { if (this.state !== 'menu') this.resize(); });
   }
 
+  // --- 遊戲初始化相關 ---
   start() {
     this.isProMode = false; 
     this.rows = parseInt(document.getElementById('setting-size').value);
@@ -636,6 +683,7 @@ class TriangularNim {
     this.rule = document.getElementById('setting-rule-pro').value;
     this.boardType = document.getElementById('setting-board-select').value;
 
+    // 依據不同地圖設定層數
     if (this.boardType === 'iron_heart') this.rows = 5;
     else if (['boomerang', 'donut'].includes(this.boardType)) this.rows = 6;
     else this.rows = 7; 
@@ -661,17 +709,20 @@ class TriangularNim {
 
   initStones() {
     this.stones = [];
+    // 建立基本的三角形排列
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c <= r; c++) {
         this.stones.push({r, c, active: true, level: 1, x:0, y:0, flash: 0});
       }
     }
 
+    // 專家模式的地圖配置邏輯
     if (this.isProMode) {
        if (this.boardType === 'iron_heart') {
           this.applyMapConfig([[2,1], [3,1], [3,2]], 2);
        }
        else if (['honeycomb', 'sky_corridor', 'bridge'].includes(this.boardType)) {
+          // 先挖掉一些洞
           this.removeStone(0,0);
           this.removeStone(1,0); this.removeStone(1,1);
           this.removeStone(5,0); this.removeStone(6,0); this.removeStone(6,1);
@@ -691,12 +742,10 @@ class TriangularNim {
           }
        }
        else if (this.boardType === 'hourglass') {
-          // 沙漏: 挖掉 Row 3,4 的兩側，保留中心
           this.removeStone(3,0); this.removeStone(3,3); 
           this.removeStone(4,0); this.removeStone(4,4);
           this.removeStone(5,0); this.removeStone(6,0); this.removeStone(6,1); 
           this.removeStone(5,5); this.removeStone(6,5); this.removeStone(6,6); 
-          // 橘色配置: 頂端尖點、頸部、底部中心
           this.applyMapConfig([[0,0], [2,1], [4,2], [5,2], [5,3], [6,2], [6,3], [6,4]], 2);
        }
        else if (this.boardType === 'boomerang') {
@@ -704,50 +753,37 @@ class TriangularNim {
           this.applyMapConfig([[0,0], [1,0], [1,1], [5,0], [5,1], [5,4], [5,5]], 2);
        }
        else if (this.boardType === 'donut') {
-          // 甜甜圈: 6層六角形 (移除角)
           this.removeStone(0,0); 
           this.removeStone(5,0); this.removeStone(5,5); 
-          // 挖中心孔
           this.removeStone(3,1); this.removeStone(3,2); this.removeStone(4,2);
-          // 橘色內圈，藍色外圈
-          // 手動指定橘色內圈 (圍繞孔洞)
           const innerRing = [[2,0], [2,1], [2,2], [3,0], [3,3], [4,1], [4,3], [5,2], [5,3]];
           this.applyMapConfig(innerRing, 2);
        }
        else if (this.boardType === 'tetris') {
-          // 不規則挖洞
           this.removeStone(0,0); this.removeStone(6,0); this.removeStone(6,5); this.removeStone(3,0); this.removeStone(3,3);
-          // 俄羅斯方塊形狀 (I, O, Z/L)
-          const shapeI = [[1,0], [2,0], [2,1], [2,2], [3,2]]; // ㄣ形
-          const shapeO = [[4,0], [5,0], [5,1], [6,1]]; // 田字 (菱形視感)
-          const shapeL = [[4,4], [5,4], [6,3], [6,4]]; // 類似L
+          const shapeI = [[1,0], [2,0], [2,1], [2,2], [3,2]];
+          const shapeO = [[4,0], [5,0], [5,1], [6,1]];
+          const shapeL = [[4,4], [5,4], [6,3], [6,4]];
           this.applyMapConfig([...shapeI, ...shapeO, ...shapeL], 2);
        }
        else if (this.boardType === 'ruins') {
-          // 1. 不對稱挖洞 (左上崩塌, 右下崩塌, 中間裂痕)
           this.removeStone(0,0); this.removeStone(1,0); this.removeStone(2,0);
           this.removeStone(6,5); this.removeStone(6,6); this.removeStone(5,5);
           this.removeStone(3,2); this.removeStone(4,2);
-
-          // 2. 橘色配置 (斷垣殘壁)
-          const pillar = [[2,1], [3,1], [4,1], [5,1]]; // 左柱
-          const wall = [[3,3], [4,3], [4,4]]; // 右壁
-          const debris = [[1,1], [6,2], [5,0], [6,4]]; // 瓦礫
-
+          const pillar = [[2,1], [3,1], [4,1], [5,1]]; 
+          const wall = [[3,3], [4,3], [4,4]]; 
+          const debris = [[1,1], [6,2], [5,0], [6,4]]; 
           this.applyMapConfig([...pillar, ...wall, ...debris], 2);
        }
     }
   }
 
+  // Helper: 移除棋子 (標記為不活躍)
   removeStone(r, c) { const s = this.stones.find(st => st.r === r && st.c === c); if (s) s.active = false; }
+  // Helper: 設定棋子等級 (Lv2 為橘色)
   applyMapConfig(targets, lvl) { targets.forEach(([tr, tc]) => { const s = this.stones.find(st => st.r === tr && st.c === tc); if (s) s.level = lvl; }); }
 
-  toggleTurn() {
-    if (this.gameStarted) return; 
-    this.resetSelection(); this.turn = 1 - this.turn; this.updateUI();
-    if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 500); }
-  }
-
+  // --- 畫布繪製與響應式 ---
   resize() {
     const container = this.canvas.parentElement; if (!container) return;
     const w = Math.min(container.clientWidth, 800); const h = Math.max(w * 0.75, 400); 
@@ -766,24 +802,31 @@ class TriangularNim {
   draw() {
     const w = this.canvas.width / (window.devicePixelRatio||1); const h = this.canvas.height / (window.devicePixelRatio||1);
     this.ctx.clearRect(0, 0, w, h);
+    // 繪製選取線
     if (this.selection.line.length > 1) {
       const start = this.selection.line[0]; const end = this.selection.line[this.selection.line.length - 1];
       this.ctx.beginPath(); this.ctx.lineCap = 'round'; this.ctx.lineWidth = this.radius * 1.6;
       this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)'; this.ctx.moveTo(start.x, start.y); this.ctx.lineTo(end.x, end.y); this.ctx.stroke();
     }
+    // 繪製棋子
     this.stones.forEach(s => {
       if (!s.active) return;
       this.ctx.beginPath(); this.ctx.arc(s.x, s.y, this.radius, 0, Math.PI*2);
       const isSelected = this.selection.line.includes(s); const isStart = (s === this.selection.start);
+      // 顏色邏輯: Lv2(橘色), Lv1(藍色)
       if (s.level === 2) { this.ctx.fillStyle = isSelected ? '#fed7aa' : '#f97316'; this.ctx.shadowColor = '#f97316'; }
       else { this.ctx.fillStyle = isSelected ? '#facc15' : '#38bdf8'; this.ctx.shadowColor = '#38bdf8'; }
       this.ctx.shadowBlur = isSelected ? 20 : 0; this.ctx.fill();
+      // 繪製 Lv2 的核心亮點
       if (s.level === 2) { this.ctx.beginPath(); this.ctx.arc(s.x, s.y, this.radius * 0.4, 0, Math.PI*2); this.ctx.fillStyle = 'rgba(255,255,255,0.3)'; this.ctx.fill(); }
+      // 閃爍效果
       if (s.flash > 0) { this.ctx.fillStyle = `rgba(255, 255, 255, ${s.flash / 20})`; this.ctx.fill(); s.flash--; requestAnimationFrame(() => this.draw()); }
+      // 起點標記
       if (isStart) { this.ctx.lineWidth = 3; this.ctx.strokeStyle = '#fff'; this.ctx.stroke(); }
     });
   }
 
+  // --- 輸入事件處理 ---
   bindEvents() {
     const handler = (e) => {
       if (this.state !== 'playing') return; if (this.turn === 1 && this.mode !== 'human') return;
@@ -809,6 +852,7 @@ class TriangularNim {
     this.draw(); this.updateUI();
   }
 
+  // 計算是否連線成功
   calculateLine(start, end) {
     const dr = end.r - start.r; const dc = end.c - start.c;
     let sr=0, sc=0;
@@ -823,17 +867,24 @@ class TriangularNim {
     if (line.length > this.maxTake) return null; return line;
   }
 
+  // --- 遊戲流程控制 ---
   saveState() { this.history.push({ stones: this.stones.map(s => ({...s})), turn: this.turn }); }
 
   confirmMove() {
     if (this.selection.line.length === 0) return;
     this.gameStarted = true; this.saveState(); this.undoCount = 0; 
+    // 執行消除 (Lv2 降級, Lv1 消失)
     this.selection.line.forEach(s => { if (s.level > 1) { s.level--; s.flash = 20; } else { s.active = false; } });
     this.resetSelection();
+    
+    // 判定一般勝利
     if (this.checkWin()) return;
     this.turn = 1 - this.turn;
+    // 判定孤立棋勝利
     if (this.checkIsolatedWin()) return;
+    
     this.draw(); this.updateUI();
+    // AI 觸發
     if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 600); }
   }
 
@@ -846,12 +897,20 @@ class TriangularNim {
   }
   restoreState(state) { this.stones = state.stones; this.turn = state.turn; this.resize(); }
 
+  // 切換先後手
+  toggleTurn() {
+    if (this.gameStarted) return; 
+    this.resetSelection(); this.turn = 1 - this.turn; this.updateUI();
+    if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 500); }
+  }
+
   surrender() {
     this.state = 'gameover'; this.scores[1 - this.turn]++;
     this.updateScoreDisplay(); this.showBanner('surrender', {loser: this.getPlayerName(this.turn), winner: this.getPlayerName(1 - this.turn)});
     this.disableControls();
   }
 
+  // --- 勝利判定邏輯 ---
   checkWin() {
     if (this.stones.filter(s => s.active).length > 0) return false;
     this.state = 'gameover';
@@ -862,15 +921,19 @@ class TriangularNim {
     return true;
   }
 
+  // 孤立棋判定 (當盤面所有棋子都不相鄰時)
   checkIsolatedWin() {
     const activeStones = this.stones.filter(s => s.active);
     const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
     const hasNeighbors = activeStones.some(s => dirs.some(d => this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1])));
     if (hasNeighbors) return false;
+    
+    // 進入自動結算
     this.state = 'gameover';
     let totalHP = 0; activeStones.forEach(s => totalHP += s.level);
     const lastTakerIdx = (totalHP % 2 === 1) ? this.turn : (1 - this.turn);
     const winnerIdx = (this.rule === 'lose') ? (1 - lastTakerIdx) : lastTakerIdx;
+    
     this.scores[winnerIdx]++;
     this.draw(); this.updateScoreDisplay();
     this.showBanner('iso', {c: activeStones.length, winner: this.getPlayerName(winnerIdx)});
@@ -887,6 +950,7 @@ class TriangularNim {
   }
   hideBanner() { document.getElementById('result-overlay').classList.remove('show'); }
 
+  // --- AI 邏輯 ---
   getAllMoves(stonesState = null) {
     const moves = []; const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
     const currentStones = stonesState || this.stones; const actives = currentStones.filter(s => s.active);
@@ -909,20 +973,21 @@ class TriangularNim {
     let bestMove = null;
     if (this.mode === 'weak') bestMove = moves[Math.floor(Math.random() * moves.length)];
     else {
+      // 強 AI: 使用 Minimax/Memoization 搜索必勝路徑
       let totalHP = 0; this.stones.forEach(s => { if(s.active) totalHP += s.level; });
       if (totalHP <= 15) { 
         this.memo = new Map(); this.shuffle(moves);
         for (let move of moves) {
-             const originalLevels = move.map(s => s.level);
-             move.forEach((s, i) => { if (originalLevels[i] === 1) s.active = false; else s.level = 1; });
-             let iWin = false;
-             if (this.isStateIsolated()) {
-                 let remHP = 0; this.stones.forEach(s => { if(s.active) remHP += s.level; });
-                 const opponentGetsLast = (remHP % 2 === 1);
-                 iWin = (this.rule === 'lose') ? opponentGetsLast : !opponentGetsLast;
-             } else { iWin = !this.solveState(); }
-             move.forEach((s, i) => { s.level = originalLevels[i]; s.active = true; });
-             if (iWin) { bestMove = move; break; }
+              const originalLevels = move.map(s => s.level);
+              move.forEach((s, i) => { if (originalLevels[i] === 1) s.active = false; else s.level = 1; });
+              let iWin = false;
+              if (this.isStateIsolated()) {
+                  let remHP = 0; this.stones.forEach(s => { if(s.active) remHP += s.level; });
+                  const opponentGetsLast = (remHP % 2 === 1);
+                  iWin = (this.rule === 'lose') ? opponentGetsLast : !opponentGetsLast;
+              } else { iWin = !this.solveState(); }
+              move.forEach((s, i) => { s.level = originalLevels[i]; s.active = true; });
+              if (iWin) { bestMove = move; break; }
         }
         if (!bestMove) bestMove = moves[0];
       } else { this.shuffle(moves); bestMove = moves[0]; }
@@ -962,6 +1027,7 @@ class TriangularNim {
 
   shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
   
+  // --- UI 更新與輔助 ---
   updateUI() {
     this.updateScoreDisplay();
     document.getElementById('p1-name').innerText = this.getPlayerName(0);
@@ -990,16 +1056,20 @@ class TriangularNim {
   }
 
   updateScoreDisplay() { document.getElementById('p1-score').innerText = this.scores[0]; document.getElementById('p2-score').innerText = this.scores[1]; }
+  
   getPlayerName(idx) {
     if (idx === 0) return (this.mode !== 'human') ? I18N[currLang].name_human : I18N[currLang].name_p1;
     if (this.mode === 'human') return I18N[currLang].name_p2;
     return (this.mode === 'ai') ? I18N[currLang].name_ai_strong : I18N[currLang].name_ai_weak;
   }
+  
   resetSelection() { this.selection = { start: null, line: [] }; this.draw(); this.updateUI(); }
   backToMenu() { this.state = 'menu'; document.getElementById('game-view').classList.add('hidden'); document.getElementById('menu-container').classList.remove('hidden'); }
   restart() { this.startNewRound(); }
+  disableControls() { document.getElementById('btn-confirm').disabled = true; document.getElementById('btn-cancel').disabled = true; }
 }
 
+// 啟動遊戲
 const game = new TriangularNim();
 setLang('zh');
 </script>
