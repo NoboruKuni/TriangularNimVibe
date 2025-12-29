@@ -230,11 +230,10 @@ select {
     z-index: 1000;
     display: flex;
     align-items: center;
-    /* justify-content 改為 center，靠 flex:1 來分配 */
-    justify-content: center; 
-    padding: 0 10px;
+    justify-content: center;
+    padding: 0 8px; /* 稍微減少左右內距，爭取空間 */
     box-sizing: border-box;
-    gap: 8px; /* 按鈕之間的間距 */
+    gap: 6px;       /* 間距縮小，以容納 5 顆 */
   }
   
   /* 隱藏狀態 (JS控制) */
@@ -255,19 +254,29 @@ select {
 
 /* 工具列圖示按鈕 */
   .btn-icon {
-    flex: 1; /* 關鍵修正：讓四個按鈕強制平分寬度 */
+    flex: 1;      /* 關鍵：強制所有按鈕寬度相等 */
+    min-width: 0; /* 關鍵：防止按鈕被內容撐大，確保均分 */
     height: 48px;
     padding: 0;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 12px;
+    border-radius: 10px; /* 稍微縮小圓角 */
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #cbd5e1;
     transition: all 0.2s;
   }
   
-  .m-btn-mid { width: 42px; height: 42px; padding: 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-  .m-btn-big { flex: 1; font-size: 1.1rem; height: 42px; max-width: 140px;}
+  /* 按下效果 */
+  .btn-icon:active:not(:disabled) { transform: scale(0.92); background: rgba(255,255,255,0.15); }
+  
+  /* 禁用狀態 (暗淡變色，不消失) */
+  .btn-icon:disabled {
+    opacity: 0.3;
+    filter: grayscale(1);
+    cursor: not-allowed;
+    background: transparent;
+    border-color: rgba(255,255,255,0.05);
+  }
 
   /* 顏色微調 */
   .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
@@ -592,6 +601,10 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
   <button id="m-btn-surrender" class="btn-icon btn-danger" onclick="game.surrender()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
   </button>
+
+  <button id="m-btn-restart" class="btn-icon" onclick="game.restart()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+  </button>
   
   <button id="m-btn-turn" class="btn-icon btn-switch" onclick="game.toggleTurn()">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
@@ -601,7 +614,6 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
   </button>
 </div>
-
 
 <script>
 /* =========================================
