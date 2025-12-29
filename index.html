@@ -254,18 +254,30 @@ select {
 
 /* 工具列圖示按鈕 */
   .btn-icon {
-    flex: 1;      /* 關鍵：強制所有按鈕寬度相等 */
-    min-width: 0; /* 關鍵：防止按鈕被內容撐大，確保均分 */
-    height: 48px;
-    padding: 0;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 10px; /* 稍微縮小圓角 */
+    flex: 1;             /* 強制平分寬度 */
+    min-width: 0;        /* 防止內容撐開 */
+    height: 48px;        /* 固定高度 */
+    margin: 0;           /* 關鍵：消除預設邊距，解決偏上問題 */
+    padding: 0;          /* 確保沒有內距影響 */
+    
+    display: flex;       /* 讓內部 SVG 絕對置中 */
+    align-items: center; 
+    justify-content: center;
+    
+    border-radius: 10px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #cbd5e1;
     transition: all 0.2s;
   }
   
+  .btn-icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;      /* 消除行高影響 */
+    margin: auto;        /* 確保在 Flex 容器內置中 */
+  }
+
   /* 按下效果 */
   .btn-icon:active:not(:disabled) { transform: scale(0.92); background: rgba(255,255,255,0.15); }
   
@@ -595,25 +607,29 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 
 <div id="mobile-bar" class="mobile-controls-bar hidden">
   <button id="m-btn-back" class="btn-icon" onclick="game.backToMenu()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
   </button>
   
   <button id="m-btn-surrender" class="btn-icon btn-danger" onclick="game.surrender()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
   </button>
 
   <button id="m-btn-restart" class="btn-icon" onclick="game.restart()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
   </button>
   
   <button id="m-btn-turn" class="btn-icon btn-switch" onclick="game.toggleTurn()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 16V4m0 0L3 8m4-4l4 4"></path>
+      <path d="M17 8v12m0 0l4-4m-4 4l-4-4"></path>
+    </svg>
   </button>
 
   <button id="m-btn-undo" class="btn-icon btn-warn" onclick="game.undo()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
   </button>
 </div>
+
 
 <script>
 /* =========================================
