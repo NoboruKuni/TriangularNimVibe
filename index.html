@@ -189,91 +189,122 @@ select {
    針對手機版的優化 (Mobile Optimization)
    ========================================= */
 /* 手機版專用樣式 */
+/* =========================================
+   手機版最終優化樣式
+   ========================================= */
 @media (max-width: 900px) {
-  /* 遊戲畫面佈局調整 */
+  /* 1. 遊戲容器：撐滿寬度，底部留白 */
   #game-view {
     flex-direction: column;
-    padding: 10px;
-    padding-bottom: 90px; /* 留給底部工具列的空間 */
+    padding: 0;
+    padding-bottom: 80px; /* 避開底部工具列 */
+    width: 100vw;
+    overflow-x: hidden;
   }
 
-  /* 上方資訊區並排 */
+  /* 2. 棋盤區：移除邊距，讓棋子最大化 */
+  .main-area {
+    width: 100%;
+    order: 2;
+    margin: 0;
+  }
+  .canvas-container {
+    width: 100%;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  canvas {
+    width: 100% !important;
+    border-radius: 0;
+  }
+
+  /* 3. [操作區]：確認與重選 (放在棋盤正下方) */
+  .main-area .action-controls {
+    display: flex !important; /* 確保顯示 */
+    width: 100%;
+    padding: 10px 15px;       /* 兩側留一點縫隙比較好看 */
+    box-sizing: border-box;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6); /* 微微背景區隔 */
+  }
+  
+  /* 重選按鈕 (佔 1 份寬度) */
+  #btn-cancel {
+    flex: 1;
+    height: 54px;
+    font-size: 1rem;
+    border-color: rgba(255,255,255,0.2);
+    color: #cbd5e1;
+  }
+  
+  /* 確認按鈕 (佔 2 份寬度，且字體加大) */
+  #btn-confirm {
+    flex: 2;
+    height: 54px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+  }
+
+  /* 4. 上方資訊區 (計分板) */
   .side-area {
     width: 100%;
     display: flex;
-    gap: 8px;
-    order: 1; /* 置頂 */
+    gap: 4px;
+    padding: 4px;
+    box-sizing: border-box;
+    order: 1;
   }
   .side-area .panel {
     flex: 1;
     margin: 0;
-    padding: 10px;
+    padding: 6px;
+    font-size: 0.85rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  
-  /* 隱藏手機版側邊欄原本的按鈕區 */
+  /* 手機版隱藏側邊欄裡的電腦版按鈕區 */
   .side-area .controls { display: none !important; }
   
-  .main-area { width: 100%; order: 2; margin-top: 5px; }
-  #status { order: 3; margin: 5px 0; font-size: 1.1rem; }
+  /* 狀態文字 */
+  #status { order: 3; margin: 0; padding: 5px; font-size: 1rem; }
 
-  /* 底部固定工具列 */
+  /* 5. 底部固定工具列 (系統功能) */
   .mobile-controls-bar {
     position: fixed;
     bottom: 0; left: 0; width: 100%;
     height: 70px;
-    background: rgba(15, 23, 42, 0.98);
+    background: rgba(15, 23, 42, 0.98); /* 深色背景防干擾 */
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
     z-index: 1000;
     display: flex;
     align-items: center;
+    justify-content: space-evenly; /* 平均分散 4 個圖示 */
     padding: 0 10px;
     box-sizing: border-box;
-    gap: 8px;
   }
   
-  /* 隱藏狀態 (JS控制) */
   .mobile-controls-bar.hidden { display: none !important; }
 
-  /* 左側系統區 */
-  .m-group-sys { display: flex; gap: 5px; }
-  
-  /* 分隔線 */
-  .m-divider {
-    width: 1px; height: 30px;
-    background: rgba(255,255,255,0.2);
-    margin: 0 5px;
-  }
-
-  /* 右側動作區 */
-  .m-group-act { display: flex; gap: 8px; flex: 1; justify-content: flex-end; }
-
-  /* 通用圖示按鈕樣式 */
+  /* 工具列圖示按鈕 */
   .btn-icon {
-    width: 42px; height: 42px;
+    width: 50px; /* 固定寬度，正方形 */
+    height: 48px;
     padding: 0;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
+    border-radius: 12px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #cbd5e1;
   }
+  .btn-icon:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
   
-  .m-btn-mid { width: 42px; height: 42px; padding: 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-  .m-btn-big { flex: 1; font-size: 1.1rem; height: 42px; max-width: 140px;}
-
-  /* 顏色微調 */
-  .btn-danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444; }
-  .btn-warn { background: rgba(249, 115, 22, 0.2); color: #f97316; border-color: #f97316; }
-  .btn-switch { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
-}
-
-/* 電腦版預設隱藏 */
-@media (min-width: 901px) {
-  .mobile-controls-bar { display: none !important; }
+  /* 顏色定義 */
+  .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
+  .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
+  .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
 }
 
 
@@ -541,28 +572,18 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
         <div class="result-desc" id="res-desc"></div>
       </div>
     </div>
-    <div class="controls">
+    
+    <div class="controls action-controls">
+      <button id="btn-cancel" class="btn-secondary" onclick="game.resetSelection()" disabled data-i18n="cancel">重選</button>
       <button id="btn-confirm" onclick="game.confirmMove()" disabled data-i18n="confirm">確認下子</button>
-      <button id="btn-cancel" class="btn-secondary" onclick="game.resetSelection()" disabled data-i18n="cancel">取消重選</button>
     </div>
   </div>
 
   <div class="side-area">
     <div class="panel rule-panel">
-      <div class="rule-title" data-i18n="rule_title_short">當前規則</div>
-      <div id="rule-hint"></div>
-    </div>
+       </div>
     <div class="panel scoreboard">
-      <h3 data-i18n="scoreboard" style="margin-top:0;">計分板</h3>
-      <div id="p1-score-row" class="score-item">
-        <span id="p1-name">P1</span>
-        <span id="p1-score">0</span>
-      </div>
-      <div id="p2-score-row" class="score-item">
-        <span id="p2-name">P2</span>
-        <span id="p2-score">0</span>
-      </div>
-    </div>
+       </div>
     <div class="panel controls" style="display:flex; flex-direction:column; gap:12px;">
       <div><button id="btn-turn" class="btn-switch" onclick="game.toggleTurn()"></button></div>
       <div style="display:flex; gap:10px;">
@@ -577,29 +598,21 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 </div>
 
 <div id="mobile-bar" class="mobile-controls-bar hidden">
-  <div class="m-group-sys">
-    <button id="m-btn-back" class="btn-icon" onclick="game.backToMenu()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-    </button>
-    <button id="m-btn-surrender" class="btn-icon btn-danger" onclick="game.surrender()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
-    </button>
-    <button id="m-btn-turn" class="btn-icon btn-switch" onclick="game.toggleTurn()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
-    </button>
-  </div>
+  <button id="m-btn-back" class="btn-icon" onclick="game.backToMenu()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+  </button>
+  
+  <button id="m-btn-surrender" class="btn-icon btn-danger" onclick="game.surrender()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+  </button>
+  
+  <button id="m-btn-turn" class="btn-icon btn-switch" onclick="game.toggleTurn()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+  </button>
 
-  <div class="m-divider"></div>
-
-  <div class="m-group-act">
-    <button id="m-btn-undo" class="btn-icon btn-warn" onclick="game.undo()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
-    </button>
-    
-    <button id="m-btn-cancel" class="btn-secondary m-btn-mid" onclick="game.resetSelection()">✕</button>
-    
-    <button id="m-btn-confirm" class="m-btn-big" onclick="game.confirmMove()" data-i18n="confirm">確認</button>
-  </div>
+  <button id="m-btn-undo" class="btn-icon btn-warn" onclick="game.undo()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+  </button>
 </div>
 
 
@@ -1172,27 +1185,24 @@ class TriangularNim {
     const isMyTurn = (this.state === 'playing') && (this.mode === 'human' || this.turn === 0);
     const canUndo = (this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn);
 
-    // 1. 確認與取消
-    const confirmDisabled = !(hasSel && isMyTurn);
-    document.getElementById('btn-confirm').disabled = confirmDisabled;
-    document.getElementById('btn-cancel').disabled = confirmDisabled;
-    
-    // 手機版同步
-    document.getElementById('m-btn-confirm').disabled = confirmDisabled;
-    document.getElementById('m-btn-cancel').disabled = confirmDisabled;
+// 1. 確認與重選 (電腦與手機共用同一組按鈕 ID)
+const confirmDisabled = !(hasSel && isMyTurn);
+document.getElementById('btn-confirm').disabled = confirmDisabled;
+document.getElementById('btn-cancel').disabled = confirmDisabled;
 
-    // 2. 悔棋
-    const undoBtn = document.getElementById('btn-undo');
-    undoBtn.innerText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
-    undoBtn.disabled = !canUndo;
-    // 手機版同步
-    document.getElementById('m-btn-undo').disabled = !canUndo;
+// 2. 悔棋 (手機版有獨立 ID: m-btn-undo)
+const undoBtn = document.getElementById('btn-undo'); // 電腦版
+undoBtn.innerText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
+undoBtn.disabled = !canUndo;
+// 同步手機版
+document.getElementById('m-btn-undo').disabled = !canUndo;
 
-    // 3. 認輸
-    document.getElementById('btn-surrender').innerText = I18N[currLang].surrender;
-    document.getElementById('btn-surrender').disabled = !isMyTurn;
-    // 手機版同步
-    document.getElementById('m-btn-surrender').disabled = !isMyTurn;
+// 3. 認輸 (手機版有獨立 ID: m-btn-surrender)
+document.getElementById('btn-surrender').innerText = I18N[currLang].surrender;
+document.getElementById('btn-surrender').disabled = !isMyTurn;
+// 同步手機版
+document.getElementById('m-btn-surrender').disabled = !isMyTurn;
+
 
     // 4. 切換先手 (遊戲開始後隱藏/禁用)
     const turnBtn = document.getElementById('btn-turn');
