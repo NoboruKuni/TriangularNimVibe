@@ -396,7 +396,7 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
           </label>
 
           <div class="controls">
-            <button class="start-btn" onclick="game.startPro()" style="background:var(--accent); color:#4a044e;">進入挑戰</button>
+            <button class="start-btn" onclick="game.startPro()" style="background:var(--accent); color:#4a044e;" data-i18n="startChallenge">進入挑戰</button>
           </div>
 
           <div class="lang-switch">
@@ -471,7 +471,7 @@ const I18N = {
     map_boomerang: "迴力鏢", map_donut: "甜甜圈", map_bridge: "斷橋", map_tetris: "俄羅斯方塊", map_ruins: "遺跡",
     name_p1: "玩家一", name_p2: "玩家二", name_human: "人類", name_ai_strong: "強 AI", name_ai_weak: "弱 AI",
     rule_title_short: "當前規則", rule_lose: "拿到最後一顆的人【輸】", rule_win: "拿到最後一顆的人【贏】",
-    start: "開始遊戲", confirm: "確認下子", cancel: "重選", undo: "悔棋 ({n})", surrender: "認輸",
+    start: "開始遊戲", startChallenge: "進入挑戰", confirm: "確認下子", cancel: "重選", undo: "悔棋 ({n})", surrender: "認輸",
     restart: "再來一局", back: "回選單", scoreboard: "計分板", howto_title: "詳細規則", howto_title_pro: "進階規則",
     status_turn: "輪到：{player}", status_ai: "🤖 AI 正在思考...", btn_switch_prefix: "切換先手", 
     win_title: "🎉 遊戲結束", win_msg: "{winner} 獲勝！",
@@ -488,7 +488,7 @@ const I18N = {
     map_boomerang: "Boomerang", map_donut: "The Donut", map_bridge: "Broken Bridge", map_tetris: "Tetris", map_ruins: "Ruins",
     name_p1: "Player 1", name_p2: "Player 2", name_human: "Human", name_ai_strong: "Strong AI", name_ai_weak: "Weak AI",
     rule_title_short: "Current Rule", rule_lose: "Last Taker LOSES", rule_win: "Last Taker WINS",
-    start: "Start Game", confirm: "Confirm", cancel: "Reset", undo: "Undo ({n})", surrender: "Surrender",
+    start: "Start Game", startChallenge: "Start Challenge", confirm: "Confirm", cancel: "Reset", undo: "Undo ({n})", surrender: "Surrender",
     restart: "Restart", back: "Menu", scoreboard: "Scoreboard", howto_title: "How to Play", howto_title_pro: "Advanced Rules",
     status_turn: "Turn: {player}", status_ai: "🤖 AI is thinking...", btn_switch_prefix: "Switch Turn Order",
     win_title: "🎉 Game Over", win_msg: "{winner} Wins!",
@@ -505,7 +505,7 @@ const I18N = {
     map_boomerang: "ブーメラン", map_donut: "ドーナツ", map_bridge: "壊れた橋", map_tetris: "テトリス", map_ruins: "遺跡",
     name_p1: "P1", name_p2: "P2", name_human: "プレイヤー", name_ai_strong: "強いAI", name_ai_weak: "弱いAI",
     rule_title_short: "現在のルール", rule_lose: "最後の石を取ると【負け】", rule_win: "最後の石を取ると【勝ち】",
-    start: "ゲーム開始", confirm: "決定", cancel: "選択解除", undo: "待った ({n})", surrender: "投降",
+    start: "ゲーム開始", startChallenge: "挑戦開始", confirm: "決定", cancel: "選択解除", undo: "待った ({n})", surrender: "投降",
     restart: "もう一度", back: "メニュー", scoreboard: "スコア", howto_title: "詳しいルール", howto_title_pro: "上級ルール",
     status_turn: "手番：{player}", status_ai: "🤖 AI考案中...", btn_switch_prefix: "先攻交代",
     win_title: "🎉 勝負あり", win_msg: "勝者：{winner}",
@@ -522,7 +522,7 @@ const I18N = {
     map_boomerang: "บูมเมอแรง", map_donut: "โดนัท", map_bridge: "สะพานขาด", map_tetris: "เตตริส", map_ruins: "ซากปรักหักพัง",
     name_p1: "ผู้เล่น 1", name_p2: "ผู้เล่น 2", name_human: "มนุษย์", name_ai_strong: "AI เก่ง", name_ai_weak: "AI ง่าย",
     rule_title_short: "กติกา", rule_lose: "หยิบคนสุดท้าย = 【แพ้】", rule_win: "หยิบคนสุดท้าย = 【ชนะ】",
-    start: "เริ่มเกม", confirm: "ยืนยัน", cancel: "เลือกใหม่", undo: "ย้อนกลับ ({n})", surrender: "ยอมแพ้",
+    start: "เริ่มเกม", startChallenge: "เริ่มท้าทาย", confirm: "ยืนยัน", cancel: "เลือกใหม่", undo: "ย้อนกลับ ({n})", surrender: "ยอมแพ้",
     restart: "เล่นอีกครั้ง", back: "เมนูหลัก", scoreboard: "คะแนน", howto_title: "วิธีเล่น", howto_title_pro: "กติกาพิเศษ",
     status_turn: "ตาของ: {player}", status_ai: "🤖 AI กำลังคิด...", btn_switch_prefix: "สลับลำดับเล่น",
     win_title: "🎉 จบเกม", win_msg: "ผู้ชนะคือ: {winner}",
