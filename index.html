@@ -576,19 +576,6 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
   </div>
 </div>
 
-<div class="mobile-controls-bar">
-  <button onclick="game.undo()" class="btn-warn" style="flex:0 0 50px; padding:0;">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M9 14L4 9l5-5"/>
-      <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
-    </svg>
-  </button>
-  
-  <button onclick="game.resetSelection()" class="btn-secondary" style="flex:1;" data-i18n="cancel">重選</button>
-  
-  <button onclick="game.confirmMove()" style="flex:2;" data-i18n="confirm">確認下子</button>
-</div>
-
 <div id="mobile-bar" class="mobile-controls-bar hidden">
   <div class="m-group-sys">
     <button id="m-btn-back" class="btn-icon" onclick="game.backToMenu()">
