@@ -12,7 +12,7 @@
   --bg-gradient: linear-gradient(135deg, #0f172a, #020617); /* 深色背景漸層 */
   --panel-bg: rgba(255, 255, 255, 0.06); /* 半透明面板背景 */
   --primary: #38bdf8; /* 標準版主色 (藍) */
-  --accent: #facc15;  /* 강조色 (黃) */
+  --accent: #facc15;  /* 強調色 (黃) */
   --text: #f1f5f9;    /* 主要文字色 */
   --danger: #ef4444;  /* 危險/認輸色 (紅) */
   --warn: #f97316;    /* 警告色 (橘) */
@@ -186,153 +186,6 @@ select {
 }
 
 /* =========================================
-   針對手機版的優化 (Mobile Optimization)
-   ========================================= */
-/* 手機版專用樣式 */
-@media (max-width: 900px) {
-  /* 1. 遊戲容器：撐滿寬度，底部留白 */
-  #game-view {
-    flex-direction: column;
-    padding: 0;
-    padding-bottom: 80px; /* 避開底部工具列 */
-    width: 100vw;
-    overflow-x: hidden;
-  }
-
-  /* 2. 棋盤區：移除邊距，讓棋子最大化 */
-  .main-area {
-    width: 100%;
-    order: 2;
-    margin: 0;
-  }
-  .canvas-container {
-    width: 100%;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-  canvas {
-    width: 100% !important;
-    border-radius: 0;
-  }
-
-  /* 3. [操作區]：確認與重選 (放在棋盤正下方) */
-  .main-area .action-controls {
-    display: flex !important; /* 確保顯示 */
-    width: 100%;
-    padding: 10px 15px;       
-    box-sizing: border-box;
-    gap: 12px;
-    background: rgba(15, 23, 42, 0.6); 
-  }
-  
-  /* 重選按鈕 */
-  #btn-cancel {
-    flex: 1;
-    height: 54px;
-    font-size: 1rem;
-    border-color: rgba(255,255,255,0.2);
-    color: #cbd5e1;
-  }
-  
-  /* 確認按鈕 */
-  #btn-confirm {
-    flex: 2;
-    height: 54px;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-  }
-
-  /* 4. 上方資訊區 (計分板) */
-  .side-area {
-    width: 100%;
-    display: flex;
-    gap: 4px;
-    padding: 4px;
-    box-sizing: border-box;
-    order: 1;
-  }
-  .side-area .panel {
-    flex: 1;
-    margin: 0;
-    padding: 6px;
-    font-size: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .side-area .controls { display: none !important; }
-  #status { order: 3; margin: 0; padding: 5px; font-size: 1rem; }
-
-  /* 5. 底部固定工具列 (5顆按鈕均分對齊) */
-  .mobile-controls-bar {
-    position: fixed;
-    bottom: 0; left: 0; width: 100%;
-    height: 70px;
-    background: rgba(15, 23, 42, 0.98);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 8px;
-    box-sizing: border-box;
-    gap: 6px; 
-  }
-  
-  .mobile-controls-bar.hidden { display: none !important; }
-
-  /* 工具列圖示按鈕 - 通用設定 */
-  .btn-icon {
-    flex: 1;             /* 強制寬度均分 */
-    min-width: 0;        /* 防止撐開 */
-    height: 48px;        /* 固定高度 */
-    margin: 0 !important;/* 【關鍵修正】強制覆蓋全域樣式，解決切換先手按鈕偏上問題 */
-    padding: 0;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    border-radius: 10px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #cbd5e1;
-    transition: all 0.2s;
-  }
-  
-  /* 確保 SVG 尺寸一致且置中 */
-  .btn-icon svg {
-    width: 24px;
-    height: 24px;
-    display: block;
-    margin: auto;
-  }
-
-  /* 按下與禁用效果 */
-  .btn-icon:active:not(:disabled) { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-  .btn-icon:disabled {
-    opacity: 0.3;
-    filter: grayscale(1);
-    cursor: not-allowed;
-    background: transparent;
-    border-color: rgba(255,255,255,0.05);
-  }
-
-  /* 顏色微調 - 確保 .btn-switch 這裡的設定權重夠高 */
-  .mobile-controls-bar .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
-  .mobile-controls-bar .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
-  .mobile-controls-bar .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
-}
-
-/* 電腦版預設隱藏 */
-@media (min-width: 901px) {
-  .mobile-controls-bar { display: none !important; }
-}
-
-
-/* =========================================
    5. 畫布與互動層 (Canvas & Overlay)
    ========================================= */
 .canvas-container {
@@ -461,6 +314,140 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
 .rule-title { font-size: 0.9rem; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
 #rule-hint { font-size: 1.2rem; font-weight: bold; color: var(--primary); text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); line-height: 1.3; }
 #status { text-align: center; font-size: 1.3rem; margin-bottom: 10px; min-height: 1.5em; font-weight: bold; color: var(--text); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+
+/* =========================================
+   8. 手機版優化 (Mobile Optimization)
+   ========================================= */
+@media (max-width: 900px) {
+  /* 8-1. 遊戲容器：撐滿寬度，底部留白 */
+  #game-view {
+    flex-direction: column;
+    padding: 0;
+    padding-bottom: 80px; /* 避開底部工具列 */
+    width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* 8-2. 棋盤區：移除邊距，讓棋子最大化 */
+  .main-area {
+    width: 100%;
+    order: 2;
+    margin: 0;
+  }
+  .canvas-container {
+    width: 100%;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  canvas {
+    width: 100% !important;
+    border-radius: 0;
+  }
+
+  /* 8-3. 操作區：確認與重選 (放在棋盤正下方) */
+  .main-area .action-controls {
+    display: flex !important; /* 確保顯示 */
+    width: 100%;
+    padding: 10px 15px;       
+    box-sizing: border-box;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6); 
+  }
+  
+  /* 重選按鈕 */
+  #btn-cancel {
+    flex: 1;
+    height: 54px;
+    font-size: 1rem;
+    border-color: rgba(255,255,255,0.2);
+    color: #cbd5e1;
+  }
+  
+  /* 確認按鈕 */
+  #btn-confirm {
+    flex: 2;
+    height: 54px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+  }
+
+  /* 8-4. 上方資訊區 (計分板) */
+  .side-area {
+    width: 100%;
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    box-sizing: border-box;
+    order: 1;
+  }
+  .side-area .panel {
+    flex: 1;
+    margin: 0;
+    padding: 6px;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* 隱藏側邊欄原本的雜項按鈕區 */
+  .side-area .controls { display: none !important; }
+  #status { order: 3; margin: 0; padding: 5px; font-size: 1rem; }
+
+  /* 8-5. 底部固定工具列 (5顆按鈕均分對齊) */
+  .mobile-controls-bar {
+    position: fixed;
+    bottom: 0; left: 0; width: 100%;
+    height: 70px;
+    background: rgba(15, 23, 42, 0.98);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    box-sizing: border-box;
+    gap: 6px; 
+  }
+  
+  .mobile-controls-bar.hidden { display: none !important; }
+
+  /* 工具列圖示按鈕 - 通用設定 */
+  .btn-icon {
+    flex: 1;             /* 強制寬度均分 */
+    min-width: 0;        /* 防止撐開 */
+    height: 48px;        /* 固定高度 */
+    margin: 0 !important;/* 強制覆蓋，確保不偏上 */
+    padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1;
+    transition: all 0.2s;
+  }
+  
+  /* 確保 SVG 尺寸一致且置中 */
+  .btn-icon svg { width: 24px; height: 24px; display: block; margin: auto; }
+
+  /* 按下與禁用效果 */
+  .btn-icon:active:not(:disabled) { transform: scale(0.92); background: rgba(255,255,255,0.15); }
+  .btn-icon:disabled {
+    opacity: 0.3; filter: grayscale(1); cursor: not-allowed;
+    background: transparent; border-color: rgba(255,255,255,0.05);
+  }
+
+  /* 顏色微調 */
+  .mobile-controls-bar .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
+  .mobile-controls-bar .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
+  .mobile-controls-bar .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
+}
+
+/* 電腦版預設隱藏手機工具列 */
+@media (min-width: 901px) {
+  .mobile-controls-bar { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -551,8 +538,8 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
           </label>
 
           <label>
-           <span data-i18n="board_select">棋盤選擇</span>
-           <select id="setting-board-select">
+            <span data-i18n="board_select">棋盤選擇</span>
+            <select id="setting-board-select">
               <option value="iron_heart">鋼鐵之心 (Iron Heart)</option>
               <option value="honeycomb">蜂巢 (Honeycomb)</option>
               <option value="sky_corridor">空中走廊 (Sky Corridor)</option>
@@ -660,7 +647,6 @@ button.disabled-visual { background: transparent; border: 1px solid #475569; col
   </button>
 </div>
 
-
 <script>
 /* =========================================
    1. 多語言翻譯資料庫 (I18N)
@@ -719,7 +705,6 @@ const I18N = {
   },
   th: {
     title: "เกมกลยุทธ์สามเหลี่ยม", 
-    // 修正點：補上標題，變成「遊戲名稱 + Pro」
     title_pro: "เกมกลยุทธ์สามเหลี่ยม โปร", 
     board_select: "เลือกกระดาน:",
     btn_std: "โหมดมาตรฐาน", btn_pro: "โหมดโปร", opponent: "รูปแบบการเล่น:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
@@ -746,13 +731,11 @@ let currLang = 'zh';
    ========================================= */
 function setLang(lang) {
   currLang = lang;
-  // 更新所有帶有 data-i18n 屬性的文字
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
   });
   
-  // 更新下拉選單選項 (棋盤選擇)
   const boardSelect = document.getElementById('setting-board-select');
   if (boardSelect) {
       const keys = ['map_iron', 'map_honey', 'map_sky', 'map_hourglass', 'map_boomerang', 'map_donut', 'map_bridge', 'map_tetris', 'map_ruins'];
@@ -761,19 +744,16 @@ function setLang(lang) {
       });
   }
 
-  // 更新下拉選單選項 (尺寸)
   const sizeSelect = document.getElementById('setting-size');
   if(sizeSelect) {
       Array.from(sizeSelect.options).forEach(opt => opt.text = `${opt.value} ${I18N[lang].size_suffix}`);
   }
 
-  // 更新規則說明 HTML
   const stdRule = document.getElementById('howto-text');
   if (stdRule) stdRule.innerHTML = I18N[lang].howto;
   const proRule = document.getElementById('howto-text-pro');
   if (proRule) proRule.innerHTML = I18N[lang].howto_pro;
   
-  // 更新語言按鈕狀態
   document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
   const langMap = { 'zh':0, 'en':1, 'ja':2, 'th':3 };
   document.querySelectorAll('.lang-switch').forEach(container => {
@@ -781,7 +761,6 @@ function setLang(lang) {
       if (btns[langMap[lang]]) btns[langMap[lang]].classList.add('active');
   });
 
-  // 若遊戲正在進行中，同步更新遊戲內文字
   if (game && game.state !== 'menu') game.updateUI();
 }
 
@@ -796,7 +775,6 @@ function switchEdition(edition) {
   const allToggles = document.querySelectorAll('.edition-toggle');
 
   if (edition === 'std') {
-    // 切換到標準模式
     track.style.transform = 'translateX(0)';
     pageStd.classList.add('active-page'); pagePro.classList.remove('active-page');
     titleEl.classList.remove('pro-active'); titleEl.dataset.i18n = 'title';
@@ -805,7 +783,6 @@ function switchEdition(edition) {
       if(btns.length >= 2) { btns[0].classList.add('active'); btns[1].classList.remove('active'); }
     });
   } else {
-    // 切換到專家模式
     track.style.transform = 'translateX(-50%)';
     pagePro.classList.add('active-page'); pageStd.classList.remove('active-page');
     titleEl.classList.add('pro-active'); titleEl.dataset.i18n = 'title_pro';
@@ -814,7 +791,7 @@ function switchEdition(edition) {
       if(btns.length >= 2) { btns[0].classList.remove('active'); btns[1].classList.add('active'); }
     });
   }
-  setLang(currLang); // 重新套用語言以更新標題
+  setLang(currLang);
 }
 
 /* =========================================
@@ -838,11 +815,10 @@ class TriangularNim {
     this.MAX_UNDO = 2;
     this.memo = new Map();
     this.bindEvents();
-    // 視窗縮放時重新計算畫布
     window.addEventListener('resize', () => { if (this.state !== 'menu') this.resize(); });
   }
 
-  // --- 遊戲初始化相關 ---
+  // --- A. 初始化與遊戲啟動 ---
   start() {
     this.isProMode = false; 
     this.rows = parseInt(document.getElementById('setting-size').value);
@@ -860,8 +836,8 @@ class TriangularNim {
     this.mode = document.getElementById('setting-mode-pro').value;
     this.rule = document.getElementById('setting-rule-pro').value;
     this.boardType = document.getElementById('setting-board-select').value;
-
-    // 依據不同地圖設定層數
+    
+    // 設定不同地圖對應的層數
     if (this.boardType === 'iron_heart') this.rows = 5;
     else if (['boomerang', 'donut'].includes(this.boardType)) this.rows = 6;
     else this.rows = 7; 
@@ -874,7 +850,6 @@ class TriangularNim {
   }
 
   startNewRound() {
-    // ... 原本的代碼 ...
     this.initStones();
     this.turn = 0;
     this.state = 'playing';
@@ -884,27 +859,29 @@ class TriangularNim {
     this.resetSelection();
     this.hideBanner(); 
     
-    // 新增：顯示手機工具列
+    // 顯示手機專用工具列
     document.getElementById('mobile-bar').classList.remove('hidden');
 
     requestAnimationFrame(() => { this.resize(); this.updateUI(); });
-}
+  }
+
+  // --- B. 棋盤配置與地圖邏輯 ---
   initStones() {
     this.stones = [];
-    // 建立基本的三角形排列
+    // 建立基礎三角形
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c <= r; c++) {
         this.stones.push({r, c, active: true, level: 1, x:0, y:0, flash: 0});
       }
     }
 
-    // 專家模式的地圖配置邏輯
+    // 專家模式特殊地圖配置
     if (this.isProMode) {
        if (this.boardType === 'iron_heart') {
           this.applyMapConfig([[2,1], [3,1], [3,2]], 2);
        }
        else if (['honeycomb', 'sky_corridor', 'bridge'].includes(this.boardType)) {
-          // 先挖掉一些洞
+          // 挖空區域
           this.removeStone(0,0);
           this.removeStone(1,0); this.removeStone(1,1);
           this.removeStone(5,0); this.removeStone(6,0); this.removeStone(6,1);
@@ -960,12 +937,11 @@ class TriangularNim {
     }
   }
 
-  // Helper: 移除棋子 (標記為不活躍)
+  // 輔助函式：移除棋子與設定等級
   removeStone(r, c) { const s = this.stones.find(st => st.r === r && st.c === c); if (s) s.active = false; }
-  // Helper: 設定棋子等級 (Lv2 為橘色)
   applyMapConfig(targets, lvl) { targets.forEach(([tr, tc]) => { const s = this.stones.find(st => st.r === tr && st.c === tc); if (s) s.level = lvl; }); }
 
-  // --- 畫布繪製與響應式 ---
+  // --- C. 繪圖與互動 ---
   resize() {
     const container = this.canvas.parentElement; if (!container) return;
     const w = Math.min(container.clientWidth, 800); const h = Math.max(w * 0.75, 400); 
@@ -984,7 +960,7 @@ class TriangularNim {
   draw() {
     const w = this.canvas.width / (window.devicePixelRatio||1); const h = this.canvas.height / (window.devicePixelRatio||1);
     this.ctx.clearRect(0, 0, w, h);
-    // 繪製選取線
+    // 繪製選取連線
     if (this.selection.line.length > 1) {
       const start = this.selection.line[0]; const end = this.selection.line[this.selection.line.length - 1];
       this.ctx.beginPath(); this.ctx.lineCap = 'round'; this.ctx.lineWidth = this.radius * 1.6;
@@ -999,23 +975,24 @@ class TriangularNim {
       if (s.level === 2) { this.ctx.fillStyle = isSelected ? '#fed7aa' : '#f97316'; this.ctx.shadowColor = '#f97316'; }
       else { this.ctx.fillStyle = isSelected ? '#facc15' : '#38bdf8'; this.ctx.shadowColor = '#38bdf8'; }
       this.ctx.shadowBlur = isSelected ? 20 : 0; this.ctx.fill();
-      // 繪製 Lv2 的核心亮點
+      // Lv2 核心亮點
       if (s.level === 2) { this.ctx.beginPath(); this.ctx.arc(s.x, s.y, this.radius * 0.4, 0, Math.PI*2); this.ctx.fillStyle = 'rgba(255,255,255,0.3)'; this.ctx.fill(); }
-      // 閃爍效果
+      // 消除閃爍動畫
       if (s.flash > 0) { this.ctx.fillStyle = `rgba(255, 255, 255, ${s.flash / 20})`; this.ctx.fill(); s.flash--; requestAnimationFrame(() => this.draw()); }
-      // 起點標記
+      // 起點外框
       if (isStart) { this.ctx.lineWidth = 3; this.ctx.strokeStyle = '#fff'; this.ctx.stroke(); }
     });
   }
 
-  // --- 輸入事件處理 ---
   bindEvents() {
     const handler = (e) => {
       if (this.state !== 'playing') return; if (this.turn === 1 && this.mode !== 'human') return;
       e.preventDefault();
       const rect = this.canvas.getBoundingClientRect();
       const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
-      const hit = this.stones.find(s => s.active && Math.hypot(s.x - (cx - rect.left), s.y - (cy - rect.top)) < this.radius * 1.8);
+      // 手機觸控加大感應範圍 (2.5倍), 滑鼠維持 1.8倍
+      const hitRadius = this.radius * (e.touches ? 2.5 : 1.8);
+      const hit = this.stones.find(s => s.active && Math.hypot(s.x - (cx - rect.left), s.y - (cy - rect.top)) < hitRadius);
       if ((e.type === 'mousedown' || e.type === 'touchstart') && hit) this.handleInput(hit);
     };
     this.canvas.addEventListener('mousedown', handler);
@@ -1034,7 +1011,6 @@ class TriangularNim {
     this.draw(); this.updateUI();
   }
 
-  // 計算是否連線成功
   calculateLine(start, end) {
     const dr = end.r - start.r; const dc = end.c - start.c;
     let sr=0, sc=0;
@@ -1049,7 +1025,7 @@ class TriangularNim {
     if (line.length > this.maxTake) return null; return line;
   }
 
-  // --- 遊戲流程控制 ---
+  // --- D. 核心遊戲流程 (移動、悔棋、投降) ---
   saveState() { this.history.push({ stones: this.stones.map(s => ({...s})), turn: this.turn }); }
 
   confirmMove() {
@@ -1059,14 +1035,14 @@ class TriangularNim {
     this.selection.line.forEach(s => { if (s.level > 1) { s.level--; s.flash = 20; } else { s.active = false; } });
     this.resetSelection();
     
-    // 判定一般勝利
+    // 判定勝利條件
     if (this.checkWin()) return;
     this.turn = 1 - this.turn;
-    // 判定孤立棋勝利
+    // 判定孤立棋特殊勝利
     if (this.checkIsolatedWin()) return;
     
     this.draw(); this.updateUI();
-    // AI 觸發
+    // 觸發 AI
     if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 600); }
   }
 
@@ -1079,7 +1055,6 @@ class TriangularNim {
   }
   restoreState(state) { this.stones = state.stones; this.turn = state.turn; this.resize(); }
 
-  // 切換先後手
   toggleTurn() {
     if (this.gameStarted) return; 
     this.resetSelection(); this.turn = 1 - this.turn; this.updateUI();
@@ -1092,7 +1067,7 @@ class TriangularNim {
     this.disableControls();
   }
 
-  // --- 勝利判定邏輯 ---
+  // --- E. 勝利判定與 AI 演算法 ---
   checkWin() {
     if (this.stones.filter(s => s.active).length > 0) return false;
     this.state = 'gameover';
@@ -1103,14 +1078,14 @@ class TriangularNim {
     return true;
   }
 
-  // 孤立棋判定 (當盤面所有棋子都不相鄰時)
   checkIsolatedWin() {
     const activeStones = this.stones.filter(s => s.active);
     const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
+    // 檢查是否還有相鄰棋子
     const hasNeighbors = activeStones.some(s => dirs.some(d => this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1])));
     if (hasNeighbors) return false;
     
-    // 進入自動結算
+    // 進入強制結算
     this.state = 'gameover';
     let totalHP = 0; activeStones.forEach(s => totalHP += s.level);
     const lastTakerIdx = (totalHP % 2 === 1) ? this.turn : (1 - this.turn);
@@ -1122,33 +1097,7 @@ class TriangularNim {
     this.disableControls(); return true;
   }
 
-  showBanner(type, vars) {
-    const overlay = document.getElementById('result-overlay');
-    let msg = I18N[currLang][type + '_msg'];
-    for (let k in vars) msg = msg.replace(`{${k}}`, vars[k]);
-    document.getElementById('res-title').innerText = I18N[currLang][type + '_title'];
-    document.getElementById('res-desc').innerText = msg;
-    overlay.classList.add('show'); document.getElementById('status').innerText = "";
-  }
-  hideBanner() { document.getElementById('result-overlay').classList.remove('show'); }
-
-  // --- AI 邏輯 ---
-  getAllMoves(stonesState = null) {
-    const moves = []; const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
-    const currentStones = stonesState || this.stones; const actives = currentStones.filter(s => s.active);
-    actives.forEach(start => {
-      moves.push([start]); 
-      dirs.forEach(d => {
-        let line = [start]; let curr = start;
-        for (let i = 1; i < this.maxTake; i++) {
-          const next = currentStones.find(s => s.active && s.r === curr.r + d[0] && s.c === curr.c + d[1]);
-          if (!next) break; curr = next; line.push(next); moves.push([...line]);
-        }
-      });
-    });
-    return moves;
-  }
-
+  // AI 決策核心
   runAI() {
     if (this.state === 'gameover') return;
     const moves = this.getAllMoves();
@@ -1176,6 +1125,22 @@ class TriangularNim {
     }
     this.selection.line = bestMove; this.draw();
     setTimeout(() => { this.confirmMove(); if (this.state !== 'gameover') this.state = 'playing'; }, 600);
+  }
+
+  getAllMoves(stonesState = null) {
+    const moves = []; const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
+    const currentStones = stonesState || this.stones; const actives = currentStones.filter(s => s.active);
+    actives.forEach(start => {
+      moves.push([start]); 
+      dirs.forEach(d => {
+        let line = [start]; let curr = start;
+        for (let i = 1; i < this.maxTake; i++) {
+          const next = currentStones.find(s => s.active && s.r === curr.r + d[0] && s.c === curr.c + d[1]);
+          if (!next) break; curr = next; line.push(next); moves.push([...line]);
+        }
+      });
+    });
+    return moves;
   }
 
   solveState() {
@@ -1207,99 +1172,79 @@ class TriangularNim {
       return !activeStones.some(s => dirs.some(d => this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1])));
   }
 
+  // --- F. 輔助函式與 UI 更新 ---
   shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
   
-  // --- UI 更新與輔助 ---
-    updateUI() {
-    // --- 1. 基礎文字與分數更新 ---
+  showBanner(type, vars) {
+    const overlay = document.getElementById('result-overlay');
+    let msg = I18N[currLang][type + '_msg'];
+    for (let k in vars) msg = msg.replace(`{${k}}`, vars[k]);
+    document.getElementById('res-title').innerText = I18N[currLang][type + '_title'];
+    document.getElementById('res-desc').innerText = msg;
+    overlay.classList.add('show'); document.getElementById('status').innerText = "";
+  }
+  hideBanner() { document.getElementById('result-overlay').classList.remove('show'); }
+
+  updateUI() {
+    // 1. 基礎文字與分數
     this.updateScoreDisplay();
     document.getElementById('p1-name').innerText = this.getPlayerName(0);
     document.getElementById('p2-name').innerText = this.getPlayerName(1);
-    
-    // 規則提示文字
     document.getElementById('rule-hint').innerText = I18N[currLang][this.rule === 'lose' ? 'rule_lose' : 'rule_win'];
 
-    // --- 2. 狀態列顯示 (上方) ---
+    // 2. 狀態列
     if (this.state !== 'gameover') {
         const isAi = (this.mode !== 'human' && this.turn === 1);
         const txt = isAi ? I18N[currLang].status_ai : I18N[currLang].status_turn.replace('{player}', this.getPlayerName(this.turn));
         const el = document.getElementById('status');
-        if (el) {
-            el.innerText = txt; 
-            el.style.color = isAi ? '#facc15' : '#f8fafc';
-        }
+        if (el) { el.innerText = txt; el.style.color = isAi ? '#facc15' : '#f8fafc'; }
     }
-
-    // 分數板高亮當前玩家
     document.getElementById('p1-score-row').classList.toggle('active', this.turn === 0);
     document.getElementById('p2-score-row').classList.toggle('active', this.turn === 1);
 
-    // --- 3. 按鈕狀態邏輯計算 ---
+    // 3. 按鈕邏輯
     const hasSel = this.selection.line.length > 0;
     const isMyTurn = (this.state === 'playing') && (this.mode === 'human' || this.turn === 0);
     const canUndo = (this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn);
 
-    // --- 4. 操作按鈕 (確認 / 重選) ---
-    // 說明：手機版與電腦版現在共用同一組 HTML ID (放在棋盤下方)，所以只需設定一次
+    // 操作按鈕 (確認/重選)
     const confirmBtn = document.getElementById('btn-confirm');
     const cancelBtn = document.getElementById('btn-cancel');
-    
     if (confirmBtn) confirmBtn.disabled = !(hasSel && isMyTurn);
     if (cancelBtn) cancelBtn.disabled = !(hasSel && isMyTurn);
 
-    // --- 5. 悔棋按鈕 (Undo) ---
-    // 電腦版 (有文字)
+    // 悔棋
     const undoBtn = document.getElementById('btn-undo');
     if (undoBtn) {
         undoBtn.innerText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
         undoBtn.disabled = !canUndo;
     }
-    // 手機版 (底部圖示)
     const mUndoBtn = document.getElementById('m-btn-undo');
     if (mUndoBtn) mUndoBtn.disabled = !canUndo;
 
-    // --- 6. 認輸按鈕 (Surrender) ---
-    // 電腦版 (有文字)
+    // 認輸
     const surBtn = document.getElementById('btn-surrender');
-    if (surBtn) {
-        surBtn.innerText = I18N[currLang].surrender;
-        surBtn.disabled = !isMyTurn;
-    }
-    // 手機版 (底部圖示)
+    if (surBtn) { surBtn.innerText = I18N[currLang].surrender; surBtn.disabled = !isMyTurn; }
     const mSurBtn = document.getElementById('m-btn-surrender');
     if (mSurBtn) mSurBtn.disabled = !isMyTurn;
 
-    // --- 7. 切換先手按鈕 (Turn Switch) ---
-    // 邏輯：遊戲開始後禁用
-    const turnBtn = document.getElementById('btn-turn');     // 電腦版
-    const mTurnBtn = document.getElementById('m-btn-turn');  // 手機版
+    // 切換先手 (遊戲開始後僅變暗禁用，不消失)
+    const turnBtn = document.getElementById('btn-turn');
+    const mTurnBtn = document.getElementById('m-btn-turn');
 
     if (this.gameStarted) { 
-        // 遊戲已開始：禁用按鈕 (變暗)
-        if (turnBtn) {
-            turnBtn.classList.add('disabled-visual'); 
-            turnBtn.disabled = true; 
-        }
-        if (mTurnBtn) {
-            mTurnBtn.disabled = true;     // 手機版禁用
-            mTurnBtn.style.display = 'flex'; // 修正：強制保持顯示，維持版面平衡
-        }
+        if (turnBtn) { turnBtn.classList.add('disabled-visual'); turnBtn.disabled = true; }
+        if (mTurnBtn) { mTurnBtn.disabled = true; mTurnBtn.style.display = 'flex'; }
     } else { 
-        // 遊戲未開始：啟用按鈕
-        if (turnBtn) {
-            turnBtn.classList.remove('disabled-visual'); 
-            turnBtn.disabled = false; 
+        if (turnBtn) { 
+            turnBtn.classList.remove('disabled-visual'); turnBtn.disabled = false; 
             turnBtn.innerText = `${I18N[currLang].btn_switch_prefix} [${this.getPlayerName(1 - this.turn)}]`;
         }
-        if (mTurnBtn) {
-            mTurnBtn.disabled = false;    // 手機版啟用
-            mTurnBtn.style.display = 'flex'; // 保持顯示
-        }
+        if (mTurnBtn) { mTurnBtn.disabled = false; mTurnBtn.style.display = 'flex'; }
     }
   }
 
   updateScoreDisplay() { document.getElementById('p1-score').innerText = this.scores[0]; document.getElementById('p2-score').innerText = this.scores[1]; }
-  
   getPlayerName(idx) {
     if (idx === 0) return (this.mode !== 'human') ? I18N[currLang].name_human : I18N[currLang].name_p1;
     if (this.mode === 'human') return I18N[currLang].name_p2;
@@ -1311,10 +1256,8 @@ class TriangularNim {
     this.state = 'menu'; 
     document.getElementById('game-view').classList.add('hidden'); 
     document.getElementById('menu-container').classList.remove('hidden'); 
-    
-    // 新增：隱藏手機工具列
     document.getElementById('mobile-bar').classList.add('hidden');
-}
+  }
   restart() { this.startNewRound(); }
   disableControls() { document.getElementById('btn-confirm').disabled = true; document.getElementById('btn-cancel').disabled = true; }
 }
