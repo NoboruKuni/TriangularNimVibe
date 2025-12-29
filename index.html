@@ -230,9 +230,11 @@ select {
     z-index: 1000;
     display: flex;
     align-items: center;
+    /* justify-content 改為 center，靠 flex:1 來分配 */
+    justify-content: center; 
     padding: 0 10px;
     box-sizing: border-box;
-    gap: 8px;
+    gap: 8px; /* 按鈕之間的間距 */
   }
   
   /* 隱藏狀態 (JS控制) */
@@ -251,24 +253,26 @@ select {
   /* 右側動作區 */
   .m-group-act { display: flex; gap: 8px; flex: 1; justify-content: flex-end; }
 
-  /* 通用圖示按鈕樣式 */
+/* 工具列圖示按鈕 */
   .btn-icon {
-    width: 42px; height: 42px;
+    flex: 1; /* 關鍵修正：讓四個按鈕強制平分寬度 */
+    height: 48px;
     padding: 0;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
+    border-radius: 12px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     color: #cbd5e1;
+    transition: all 0.2s;
   }
   
   .m-btn-mid { width: 42px; height: 42px; padding: 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
   .m-btn-big { flex: 1; font-size: 1.1rem; height: 42px; max-width: 140px;}
 
   /* 顏色微調 */
-  .btn-danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444; }
-  .btn-warn { background: rgba(249, 115, 22, 0.2); color: #f97316; border-color: #f97316; }
-  .btn-switch { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: #38bdf8; }
+  .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: #ef4444; }
+  .btn-warn { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: #f97316; }
+  .btn-switch { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: #38bdf8; }
 }
 
 /* 電腦版預設隱藏 */
@@ -1213,24 +1217,26 @@ class TriangularNim {
     const mTurnBtn = document.getElementById('m-btn-turn');  // 手機版
 
     if (this.gameStarted) { 
-        // 遊戲已開始：
-        // 電腦版 -> 視覺上變灰，禁用
+        // 遊戲已開始：禁用按鈕 (變暗)
         if (turnBtn) {
             turnBtn.classList.add('disabled-visual'); 
             turnBtn.disabled = true; 
         }
-        // 手機版 -> 直接隱藏 (display: none)，節省底部空間
-        if (mTurnBtn) mTurnBtn.style.display = 'none';
+        if (mTurnBtn) {
+            mTurnBtn.disabled = true;     // 手機版禁用
+            mTurnBtn.style.display = 'flex'; // 修正：強制保持顯示，維持版面平衡
+        }
     } else { 
-        // 遊戲未開始：
-        // 電腦版 -> 啟用，並顯示文字
+        // 遊戲未開始：啟用按鈕
         if (turnBtn) {
             turnBtn.classList.remove('disabled-visual'); 
             turnBtn.disabled = false; 
             turnBtn.innerText = `${I18N[currLang].btn_switch_prefix} [${this.getPlayerName(1 - this.turn)}]`;
         }
-        // 手機版 -> 顯示出來 (display: flex)
-        if (mTurnBtn) mTurnBtn.style.display = 'flex';
+        if (mTurnBtn) {
+            mTurnBtn.disabled = false;    // 手機版啟用
+            mTurnBtn.style.display = 'flex'; // 保持顯示
+        }
     }
   }
 
