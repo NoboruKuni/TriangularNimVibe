@@ -11,8 +11,8 @@
 :root {
   --bg-gradient: linear-gradient(135deg, #0f172a, #020617);
   --panel-bg: rgba(255, 255, 255, 0.06);
-  --primary: #38bdf8;  /* 青藍色 */
-  --accent: #facc15;   /* 金黃色 */
+  --primary: #38bdf8;
+  --accent: #facc15;
   --text: #f1f5f9;
   --danger: #ef4444;
   --warn: #f97316;
@@ -34,19 +34,49 @@ body {
 h1 {
   text-align: center;
   font-size: clamp(1.8rem, 5vw, 2.5rem);
-  margin: 25px 0;
+  margin: 25px 0 15px 0;
   letter-spacing: 2px;
+  line-height: 1.2;
   text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
   background: linear-gradient(to right, #38bdf8, #818cf8);
   -webkit-background-clip: text;
   color: transparent;
+  transition: all 0.5s ease;
 }
 
-/* --- 選單與面板 --- */
-#menu {
+h1.pro-active {
+  background: linear-gradient(to right, #c084fc, #facc15);
+  -webkit-background-clip: text;
+  color: transparent; 
+  text-shadow: 0 0 25px rgba(192, 132, 252, 0.5);
+}
+
+#menu-container {
   max-width: 550px;
   margin: 0 auto;
+  position: relative;
+}
+
+#slider-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+#slider-track {
+  display: flex;
+  width: 200%;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.menu-page {
+  width: 50%;
   padding: 20px;
+  box-sizing: border-box;
+  opacity: 0.4;
+  transition: opacity 0.5s;
+}
+.menu-page.active-page {
+  opacity: 1;
 }
 
 .panel {
@@ -59,12 +89,48 @@ h1 {
   margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin: 16px 0;
-  font-size: 1.05rem;
-  color: #e2e8f0;
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
+
+.panel .edition-toggle {
+  display: inline-flex;
+  width: auto;
+  min-width: 160px;
+  margin: 0;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+}
+
+.toggle-btn {
+  flex: 1;
+  text-align: center;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.2s;
+  white-space: nowrap; 
+}
+
+.toggle-btn.active {
+  background: var(--primary);
+  color: #0f172a;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.pro-theme { --primary: #c084fc; --accent: #facc15; }
+.pro-theme .toggle-btn.active { background: var(--accent); color: #4a044e; }
+
+label { display: block; margin: 16px 0; font-size: 1.05rem; color: #e2e8f0; }
 
 select {
   width: 100%;
@@ -78,7 +144,6 @@ select {
   cursor: pointer;
 }
 
-/* --- 遊戲主畫面佈局 --- */
 #game-view {
   display: flex;
   justify-content: center;
@@ -112,7 +177,6 @@ select {
   .main-area { width: 100%; }
 }
 
-/* --- Canvas 與 Banner --- */
 .canvas-container {
   position: relative;
   width: 100%;
@@ -130,7 +194,6 @@ canvas {
   touch-action: none;
 }
 
-/* 勝負結果 Banner */
 #result-overlay {
   position: absolute;
   top: 50%;
@@ -149,82 +212,11 @@ canvas {
   box-shadow: 0 0 50px rgba(250, 204, 21, 0.3);
 }
 
-#result-overlay.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto; 
-}
+#result-overlay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
 
-.result-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-.result-desc {
-  font-size: 1.1rem;
-  color: #fff;
-  line-height: 1.5;
-}
+.result-title { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-bottom: 10px; }
+.result-desc { font-size: 1.1rem; color: #fff; line-height: 1.5; }
 
-/* --- 側邊欄元件 --- */
-.scoreboard { text-align: center; }
-.score-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px;
-  font-size: 1.2rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.score-item.active {
-  color: var(--accent);
-  text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
-  font-weight: bold;
-  background: rgba(250, 204, 21, 0.05);
-}
-
-/* 獨立規則面板 */
-.rule-panel {
-  text-align: center;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  background: rgba(15, 23, 42, 0.8);
-  padding: 15px;
-}
-.rule-title {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-#rule-hint {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--primary);
-  text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-  line-height: 1.3;
-}
-
-/* 狀態文字 */
-#status {
-  text-align: center;
-  font-size: 1.3rem;
-  margin-bottom: 10px;
-  min-height: 1.5em;
-  font-weight: bold;
-  color: var(--text);
-  text-shadow: 0 0 10px rgba(255,255,255,0.2);
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-/* --- 按鈕樣式 --- */
 button {
   font-size: 1rem;
   padding: 10px 16px;
@@ -241,41 +233,23 @@ button {
 }
 button:hover:not(:disabled) { filter: brightness(1.15); transform: translateY(-2px); }
 button:disabled { background: var(--disabled); color: #94a3b8; cursor: not-allowed; opacity: 0.7; transform: none; }
+button.disabled-visual { background: transparent; border: 1px solid #475569; color: #64748b; cursor: not-allowed; pointer-events: none; }
 
-/* 禁用狀態的特殊樣式 (強制不互動) */
-button.disabled-visual { 
-  background: transparent; 
-  border: 1px solid #475569; 
-  color: #64748b; 
-  cursor: not-allowed; 
-  pointer-events: none; 
-}
-
-/* 次要按鈕 (空心) */
+.start-btn { width: 100%; padding: 0 20px; font-size: 1.15rem; height: 52px; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .btn-secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-
-/* 切換按鈕 (特殊樣式) */
-.btn-switch { 
-  background: rgba(56, 189, 248, 0.1); 
-  border: 1px solid var(--primary); 
-  color: var(--primary); 
-  width: 100%; 
-  margin-bottom: 5px;
-}
-.btn-switch:hover:not(:disabled) {
-  background: rgba(56, 189, 248, 0.2);
-}
-
+.btn-switch { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--primary); color: var(--primary); width: 100%; margin-bottom: 5px; }
+.btn-switch:hover:not(:disabled) { background: rgba(56, 189, 248, 0.2); }
 .btn-danger { background: var(--danger); color: white; }
 .btn-warn { background: var(--warn); color: #0f172a; }
 
-/* --- 語言切換 --- */
 .lang-switch {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 15px;
+  margin-top: 30px !important;
+  padding-top: 10px;
   flex-wrap: wrap;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 .lang-btn {
   background: transparent;
@@ -290,90 +264,168 @@ button.disabled-visual {
   border-color: var(--primary);
   font-weight: bold;
 }
+.pro-theme .lang-btn { border-color: rgba(192, 132, 252, 0.4); color: #e9d5ff; }
+.pro-theme .lang-btn:hover { background: rgba(192, 132, 252, 0.1); }
+.pro-theme .lang-btn.active { background: var(--accent); color: #4a044e; border-color: var(--accent); font-weight: bold; box-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
 
-/* --- 說明文字 --- */
 .rule-box {
-  margin-top: 20px;
-  max-height: 400px;
-  overflow-y: auto;
+  margin-top: 15px;
+  max-height: none;
+  overflow: visible; 
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
-#howto-text {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: #cbd5e1;
-  text-align: left;
-}
+.rule-box h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: var(--primary); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+#howto-text { font-size: 0.95rem; line-height: 1.7; color: #cbd5e1; text-align: left; }
 #howto-text ol { padding-left: 20px; margin: 0; }
 #howto-text li { margin-bottom: 8px; padding-left: 5px; }
 #howto-text b { color: var(--accent); }
+
+.scoreboard { text-align: center; }
+.score-item { display: flex; justify-content: space-between; padding: 12px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.score-item.active { color: var(--accent); text-shadow: 0 0 10px rgba(250, 204, 21, 0.5); font-weight: bold; background: rgba(250, 204, 21, 0.05); }
+.rule-panel { text-align: center; border: 1px solid rgba(56, 189, 248, 0.3); background: rgba(15, 23, 42, 0.8); padding: 15px; }
+.rule-title { font-size: 0.9rem; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+#rule-hint { font-size: 1.2rem; font-weight: bold; color: var(--primary); text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); line-height: 1.3; }
+#status { text-align: center; font-size: 1.3rem; margin-bottom: 10px; min-height: 1.5em; font-weight: bold; color: var(--text); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
 
-<div id="menu">
-  <h1 data-i18n="title">三角難題</h1>
+<div id="menu-container">
+  <h1 id="main-title" data-i18n="title">三角難題</h1>
   
-  <div class="panel">
-    <label>
-      <span data-i18n="opponent">對手</span>
-      <select id="setting-mode">
-        <option value="human" data-i18n="human">雙人對戰</option>
-        <option value="ai" data-i18n="ai_normal">強 AI</option>
-        <option value="weak" data-i18n="ai_easy">弱 AI</option>
-      </select>
-    </label>
-    
-    <label>
-      <span data-i18n="rule">規則</span>
-      <select id="setting-rule">
-        <option value="lose" data-i18n="rule_lose">拿到最後一顆輸 (Misère)</option>
-        <option value="win" data-i18n="rule_win">拿到最後一顆贏 (Normal)</option>
-      </select>
-    </label>
-    
-    <label>
-      <span data-i18n="size">層數</span>
-      <select id="setting-size">
-        <option value="4">4</option>
-        <option value="5" selected>5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-    </label>
+  <div id="slider-viewport">
+    <div id="slider-track">
+      
+      <div id="menu-std" class="menu-page active-page">
+        <div class="panel">
+          <label>
+            <div class="panel-header">
+              <span data-i18n="opponent">對手</span>
+              <div class="edition-toggle">
+                <div class="toggle-btn active" onclick="switchEdition('std')" data-i18n="btn_std">標準版</div>
+                <div class="toggle-btn" onclick="switchEdition('pro')" data-i18n="btn_pro">專業版</div>
+              </div>
+            </div>
+            <select id="setting-mode">
+              <option value="human" data-i18n="human">雙人對戰</option>
+              <option value="ai" data-i18n="ai_normal">強 AI</option>
+              <option value="weak" data-i18n="ai_easy">弱 AI</option>
+            </select>
+          </label>
+          
+          <label>
+            <span data-i18n="rule">規則</span>
+            <select id="setting-rule">
+              <option value="lose" data-i18n="rule_lose">拿到最後一顆輸 (Misère)</option>
+              <option value="win" data-i18n="rule_win">拿到最後一顆贏 (Normal)</option>
+            </select>
+          </label>
+          
+          <label>
+            <span data-i18n="size">層數</span>
+            <select id="setting-size">
+              <option value="4">4</option>
+              <option value="5" selected>5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </label>
 
-    <div class="controls">
-      <button onclick="game.start()" data-i18n="start" style="width:100%; padding:14px; font-size:1.1rem;">開始遊戲</button>
+          <div class="controls">
+            <button class="start-btn" onclick="game.start()" data-i18n="start">開始遊戲</button>
+          </div>
+
+          <div class="lang-switch">
+            <button onclick="setLang('zh')" class="lang-btn active">繁體中文</button>
+            <button onclick="setLang('en')" class="lang-btn">English</button>
+            <button onclick="setLang('ja')" class="lang-btn">日本語</button>
+            <button onclick="setLang('th')" class="lang-btn">ภาษาไทย</button>
+          </div>
+        </div>
+
+        <div class="rule-box">
+           <h3 data-i18n="howto_title">玩法說明</h3>
+           <div id="howto-text"></div>
+        </div>
+      </div>
+
+      <div id="menu-pro" class="menu-page pro-theme">
+        <div class="panel">
+          <label>
+            <div class="panel-header">
+              <span data-i18n="opponent">對手</span>
+              <div class="edition-toggle">
+                <div class="toggle-btn" onclick="switchEdition('std')" data-i18n="btn_std">標準版</div>
+                <div class="toggle-btn active" onclick="switchEdition('pro')" data-i18n="btn_pro">專業版</div>
+              </div>
+            </div>
+            <select id="setting-mode-pro">
+              <option value="human" data-i18n="human">雙人對戰</option>
+              <option value="ai" data-i18n="ai_normal">強 AI</option>
+              <option value="weak" data-i18n="ai_easy">弱 AI</option>
+            </select>
+          </label>
+
+          <label>
+            <span data-i18n="rule">規則</span>
+            <select id="setting-rule-pro">
+              <option value="lose" data-i18n="rule_lose">拿到最後一顆輸 (Misère)</option>
+              <option value="win" data-i18n="rule_win">拿到最後一顆贏 (Normal)</option>
+            </select>
+          </label>
+
+          <label>
+            <span data-i18n="board_select">棋盤選擇</span>
+            <select id="setting-board-select">
+              <option value="iron_heart">鋼鐵之心 (Iron Heart)</option>
+              <option value="honeycomb">蜂巢 (Honeycomb)</option>
+              <option value="sky_corridor">空中走廊 (Sky Corridor)</option>
+              <option value="hourglass">沙漏 (The Hourglass)</option>
+              <option value="boomerang">迴力鏢 (Boomerang)</option>
+              <option value="donut">甜甜圈 (The Donut)</option>
+              <option value="bridge">斷橋 (Broken Bridge)</option>
+              <option value="tetris">俄羅斯方塊 (Tetris)</option>
+              <option value="ruins">遺跡</option>
+            </select>
+          </label>
+
+          <div class="controls">
+            <button class="start-btn" onclick="game.startPro()" style="background:var(--accent); color:#4a044e;">進入挑戰</button>
+          </div>
+
+          <div class="lang-switch">
+            <button onclick="setLang('zh')" class="lang-btn active">繁體中文</button>
+            <button onclick="setLang('en')" class="lang-btn">English</button>
+            <button onclick="setLang('ja')" class="lang-btn">日本語</button>
+            <button onclick="setLang('th')" class="lang-btn">ภาษาไทย</button>
+          </div>
+        </div>
+
+        <div class="rule-box" style="border: 1px solid var(--primary);">
+           <h3 data-i18n="howto_title_pro">進階規則</h3>
+           <div id="howto-text-pro" style="color: #cbd5e1; line-height: 1.6;"></div>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="lang-switch">
-    <button onclick="setLang('zh')" class="lang-btn active">繁體中文</button>
-    <button onclick="setLang('en')" class="lang-btn">English</button>
-    <button onclick="setLang('ja')" class="lang-btn">日本語</button>
-    <button onclick="setLang('th')" class="lang-btn">ภาษาไทย</button>
-  </div>
-
-  <div class="panel rule-box">
-    <h3 data-i18n="howto_title" style="margin-top:0; color:var(--primary);">玩法說明</h3>
-    <div id="howto-text"></div>
   </div>
 </div>
 
 <div id="game-view" class="hidden">
-  
   <div class="main-area">
     <div id="status"></div>
-    
     <div class="canvas-container">
       <canvas id="board"></canvas>
-      
       <div id="result-overlay">
         <div class="result-title" id="res-title"></div>
         <div class="result-desc" id="res-desc"></div>
       </div>
     </div>
-    
     <div class="controls">
       <button id="btn-confirm" onclick="game.confirmMove()" disabled data-i18n="confirm">確認下子</button>
       <button id="btn-cancel" class="btn-secondary" onclick="game.resetSelection()" disabled data-i18n="cancel">取消重選</button>
@@ -385,7 +437,6 @@ button.disabled-visual {
       <div class="rule-title" data-i18n="rule_title_short">當前規則</div>
       <div id="rule-hint"></div>
     </div>
-
     <div class="panel scoreboard">
       <h3 data-i18n="scoreboard" style="margin-top:0;">計分板</h3>
       <div id="p1-score-row" class="score-item">
@@ -397,21 +448,13 @@ button.disabled-visual {
         <span id="p2-score">0</span>
       </div>
     </div>
-
     <div class="panel controls" style="display:flex; flex-direction:column; gap:12px;">
-      
-      <div>
-        <button id="btn-turn" class="btn-switch" onclick="game.toggleTurn()">
-          </button>
-      </div>
-
+      <div><button id="btn-turn" class="btn-switch" onclick="game.toggleTurn()"></button></div>
       <div style="display:flex; gap:10px;">
         <button id="btn-undo" class="btn-warn" onclick="game.undo()" disabled style="flex:1;" data-i18n="undo">悔棋</button>
         <button id="btn-surrender" class="btn-danger" onclick="game.surrender()" style="flex:1;" data-i18n="surrender">認輸</button>
       </div>
-
       <hr style="width:100%; border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 5px 0;">
-      
       <button class="btn-secondary" onclick="game.restart()" data-i18n="restart">再來一局</button>
       <button class="btn-secondary" onclick="game.backToMenu()" data-i18n="back">回選單</button>
     </div>
@@ -419,162 +462,74 @@ button.disabled-visual {
 </div>
 
 <script>
-/* =========================================
-   1. 多語言系統 (I18N)
-   ========================================= */
 const I18N = {
   zh: {
-    title: "三角難題",
-    opponent: "對手設定：", rule: "勝負規則：", size: "棋盤層數：",
-    size_suffix: "層",
-    human: "真人對戰", ai_normal: "強 AI", ai_easy: "弱 AI",
-    
-    // 玩家名稱
-    name_p1: "玩家一", name_p2: "玩家二", name_human: "人類",
-    name_ai_strong: "強 AI", name_ai_weak: "弱 AI",
-
-    rule_title_short: "當前規則",
-    rule_lose: "拿到最後一顆的人【輸】", rule_win: "拿到最後一顆的人【贏】",
-    start: "開始遊戲", confirm: "確認下子", cancel: "重選",
-    undo: "悔棋 ({n})", surrender: "認輸",
-    restart: "再來一局", back: "回選單",
-    scoreboard: "計分板", howto_title: "詳細規則",
-    status_turn: "輪到：{player}",
-    status_ai: "🤖 AI 正在思考...",
-    
-    btn_switch_prefix: "切換先手", 
-    
-    win_title: "🎉 遊戲結束",
-    win_msg: "{winner} 獲勝！",
-    iso_title: "⚠️ 孤立棋判定",
-    iso_msg: "盤面只剩孤立棋子 (剩 {c} 顆)。\n根據規則，獲勝者是：\n{winner}",
-    surrender_title: "🏳️ 投降",
-    surrender_msg: "{loser} 選擇認輸。\n恭喜 {winner} 獲勝！",
-
-    howto: `
-      <ol>
-        <li><b>遊戲目標</b>：兩名玩家輪流從棋盤上移除棋子，直到沒有棋子可拿。</li>
-        <li><b>如何移動</b>：
-           點擊一顆棋子作為<b>起點</b>，再點擊另一顆作為<b>終點</b>。兩點之間必須是連續的直線。若只想移除一顆，請點擊同一顆棋子兩次。</li>
-        <li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li>
-        <li><b>孤立棋子判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li>
-        <li><b>輔助功能</b>：支援每局 2 次悔棋；若局面無望可直接認輸。</li>
-      </ol>
-    `
+    title: "三角難題", title_pro: "三角難題 專家模式", board_select: "棋盤選擇：", 
+    btn_std: "標準模式", btn_pro: "專家模式", opponent: "對手設定：", rule: "勝負規則：", size: "棋盤層數：",
+    size_suffix: "層", human: "真人對戰", ai_normal: "強 AI", ai_easy: "弱 AI",
+    map_iron: "鋼鐵之心", map_honey: "蜂巢", map_sky: "空中走廊", map_hourglass: "沙漏",
+    map_boomerang: "迴力鏢", map_donut: "甜甜圈", map_bridge: "斷橋", map_tetris: "俄羅斯方塊", map_ruins: "遺跡",
+    name_p1: "玩家一", name_p2: "玩家二", name_human: "人類", name_ai_strong: "強 AI", name_ai_weak: "弱 AI",
+    rule_title_short: "當前規則", rule_lose: "拿到最後一顆的人【輸】", rule_win: "拿到最後一顆的人【贏】",
+    start: "開始遊戲", confirm: "確認下子", cancel: "重選", undo: "悔棋 ({n})", surrender: "認輸",
+    restart: "再來一局", back: "回選單", scoreboard: "計分板", howto_title: "詳細規則", howto_title_pro: "進階規則",
+    status_turn: "輪到：{player}", status_ai: "🤖 AI 正在思考...", btn_switch_prefix: "切換先手", 
+    win_title: "🎉 遊戲結束", win_msg: "{winner} 獲勝！",
+    iso_title: "⚠️ 孤立棋判定", iso_msg: "盤面只剩孤立棋子 (剩 {c} 顆)。\n根據規則，獲勝者是：\n{winner}",
+    surrender_title: "🏳️ 投降", surrender_msg: "{loser} 選擇認輸。\n恭喜 {winner} 獲勝！",
+    howto: `<ol><li><b>遊戲目標</b>：兩名玩家輪流從棋盤上移除棋子，直到沒有棋子可拿。</li><li><b>移除棋子</b>：點擊棋子選擇欲移除的起點及終點。兩點之間必須是連續的直線，不能跳過空格。</li><li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li><li><b>勝負判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li><li><b>輔助功能</b>：每局遊戲開始前可切換先手，遊戲中最多可連續做 2 次悔棋。</li></ol>`,
+    howto_pro: `【二階棋子 (Level 2)】<br>盤面上 <b>橘色</b> 的棋子為「二階棋子」。<br>第一次消除時，它會 <b>降階</b> 變為藍色棋子，而不會消失。<br>再次消除藍色棋子，才會將其移出棋盤。<br><br>【勝負判定：權重總和】<br>當盤面剩下不連續的孤立棋子時，系統將依據 <b>剩餘強制步數</b> 判定勝負：<br>藍色 = 1 步，橘色 = 2 步。`
   },
   en: {
-    title: "Triangular Nim",
-    opponent: "Opponent:", rule: "Winning Rule:", size: "Board Size:",
-    size_suffix: "Rows",
-    human: "PvP (Local)", ai_normal: "Strong AI", ai_easy: "Weak AI",
-
-    name_p1: "Player 1", name_p2: "Player 2", name_human: "Human",
-    name_ai_strong: "Strong AI", name_ai_weak: "Weak AI",
-
-    rule_title_short: "Current Rule",
-    rule_lose: "Last Taker LOSES", rule_win: "Last Taker WINS",
-    start: "Start Game", confirm: "Confirm", cancel: "Reset",
-    undo: "Undo ({n})", surrender: "Surrender",
-    restart: "Restart", back: "Menu",
-    scoreboard: "Scoreboard", howto_title: "How to Play",
-    status_turn: "Turn: {player}",
-    status_ai: "🤖 AI is thinking...",
-    
-    btn_switch_prefix: "Switch Turn Order",
-
-    win_title: "🎉 Game Over",
-    win_msg: "{winner} Wins!",
-    iso_title: "⚠️ Auto-Resolution",
-    iso_msg: "Only isolated stones remain ({c} left).\nBased on the rule, the winner is:\n{winner}",
-    surrender_title: "🏳️ Surrender",
-    surrender_msg: "{loser} has surrendered.\n{winner} Wins!",
-
-    howto: `
-      <ol>
-        <li><b>Goal</b>: Players take turns removing stones. The winner is decided by the last stone rule.</li>
-        <li><b>Moves</b>: 
-           Click a stone for <b>Start</b>, then click another for <b>End</b>. Stones must form a continuous line. Click the same stone twice to pick just one.</li>
-        <li><b>Limits</b>: Min 1 stone, Max (Rows - 1) stones per turn.</li>
-        <li><b>Isolated Stones</b>: System automatically calculates winner when no moves are possible.</li>
-        <li><b>Extras</b>: 2 Undos per game. Surrender button available.</li>
-      </ol>
-    `
+    title: "Triangular Nim", title_pro: "Triangular Nim PRO", board_select: "Board Select:",
+    btn_std: "Standard Mode", btn_pro: "Expert Mode", opponent: "Opponent:", rule: "Winning Rule:", size: "Board Size:",
+    size_suffix: "Rows", human: "PvP (Local)", ai_normal: "Strong AI", ai_easy: "Weak AI",
+    map_iron: "Iron Heart", map_honey: "Honeycomb", map_sky: "Sky Corridor", map_hourglass: "The Hourglass",
+    map_boomerang: "Boomerang", map_donut: "The Donut", map_bridge: "Broken Bridge", map_tetris: "Tetris", map_ruins: "Ruins",
+    name_p1: "Player 1", name_p2: "Player 2", name_human: "Human", name_ai_strong: "Strong AI", name_ai_weak: "Weak AI",
+    rule_title_short: "Current Rule", rule_lose: "Last Taker LOSES", rule_win: "Last Taker WINS",
+    start: "Start Game", confirm: "Confirm", cancel: "Reset", undo: "Undo ({n})", surrender: "Surrender",
+    restart: "Restart", back: "Menu", scoreboard: "Scoreboard", howto_title: "How to Play", howto_title_pro: "Advanced Rules",
+    status_turn: "Turn: {player}", status_ai: "🤖 AI is thinking...", btn_switch_prefix: "Switch Turn Order",
+    win_title: "🎉 Game Over", win_msg: "{winner} Wins!",
+    iso_title: "⚠️ Auto-Resolution", iso_msg: "Only isolated stones remain ({c} left).\nBased on the rule, the winner is:\n{winner}",
+    surrender_title: "🏳️ Surrender", surrender_msg: "{loser} has surrendered.\n{winner} Wins!",
+    howto: `<ol><li><b>Goal</b>: Two players take turns removing stones until none are left.</li><li><b>Remove</b>: Click to select Start and End stones. The line must be continuous and cannot skip empty spaces.</li><li><b>Limits</b>: Take at least 1 stone, max (Rows - 1) stones per turn.</li><li><b>Winning</b>: System automatically decides the winner when no adjacent stones remain.</li><li><b>Features</b>: Toggle turn order before game; max 2 consecutive undos allowed.</li></ol>`,
+    howto_pro: `【Level 2 Stones】<br><b>Orange</b> stones are "Level 2".<br>Taking them once <b>downgrades</b> them to Blue (Level 1) instead of removing them.<br>Taking Blue stones removes them from the board.<br><br>【Winning Condition: Weighted Sum】<br>When only isolated stones remain, the winner is decided by <b>Remaining Forced Moves</b>:<br>Blue = 1 Move, Orange = 2 Moves.`
   },
   ja: {
-    title: "三角ニム (Triangular Nim)",
-    opponent: "対戦モード：", rule: "勝敗ルール：", size: "盤面のサイズ：",
-    size_suffix: "段",
-    human: "二人対戦", ai_normal: "強いAI", ai_easy: "弱いAI",
-
-    name_p1: "P1", name_p2: "P2", name_human: "人間",
-    name_ai_strong: "強いAI", name_ai_weak: "弱いAI",
-
-    rule_title_short: "現在のルール",
-    rule_lose: "最後の石を取ると【負け】", rule_win: "最後の石を取ると【勝ち】",
-    start: "ゲーム開始", confirm: "決定", cancel: "選択解除",
-    undo: "待った ({n})", surrender: "投降",
-    restart: "もう一度", back: "メニュー",
-    scoreboard: "スコア", howto_title: "詳しいルール",
-    status_turn: "手番：{player}",
-    status_ai: "🤖 AI考案中...",
-    
-    btn_switch_prefix: "先攻交代",
-
-    win_title: "🎉 勝負あり",
-    win_msg: "勝者：{winner}",
-    iso_title: "⚠️ 自動判定",
-    iso_msg: "孤立した石のみ残りました（残り{c}個）。\nルールに基づき判定します：\n勝者：{winner}",
-    surrender_title: "🏳️ 投降",
-    surrender_msg: "{loser} が降参しました。\n勝者：{winner}！",
-
-    howto: `
-      <ol>
-        <li><b>目的</b>：交互に石を取り合い、最後の石に関するルールで勝敗を決めます。</li>
-        <li><b>操作方法</b>：
-           石をクリックして<b>始点</b>を選び、別の石をクリックして<b>終点</b>を選びます。直線上に並んだ石のみ選択可能です。1個だけ取る場合は、同じ石を2回クリックしてください。</li>
-        <li><b>制限</b>：1ターンに最低1個、最大（段数 - 1）個まで取れます。</li>
-        <li><b>孤立石の判定</b>：隣り合う石がなくなった場合、残りの数から自動的に勝敗を判定します。</li>
-        <li><b>機能</b>：1局につき2回まで「待った」ができます。投降も可能です。</li>
-      </ol>
-    `
+    title: "三角ニム", title_pro: "三角ニム プロモード", board_select: "盤面選択：",
+    btn_std: "標準モード", btn_pro: "プロモード", opponent: "対戦相手：", rule: "勝敗ルール：", size: "盤面のサイズ：",
+    size_suffix: "段", human: "二人対戦", ai_normal: "強いAI", ai_easy: "弱いAI",
+    map_iron: "アイアンハート", map_honey: "ハニカム", map_sky: "天空の回廊", map_hourglass: "砂時計",
+    map_boomerang: "ブーメラン", map_donut: "ドーナツ", map_bridge: "壊れた橋", map_tetris: "テトリス", map_ruins: "遺跡",
+    name_p1: "P1", name_p2: "P2", name_human: "プレイヤー", name_ai_strong: "強いAI", name_ai_weak: "弱いAI",
+    rule_title_short: "現在のルール", rule_lose: "最後の石を取ると【負け】", rule_win: "最後の石を取ると【勝ち】",
+    start: "ゲーム開始", confirm: "決定", cancel: "選択解除", undo: "待った ({n})", surrender: "投降",
+    restart: "もう一度", back: "メニュー", scoreboard: "スコア", howto_title: "詳しいルール", howto_title_pro: "上級ルール",
+    status_turn: "手番：{player}", status_ai: "🤖 AI考案中...", btn_switch_prefix: "先攻交代",
+    win_title: "🎉 勝負あり", win_msg: "勝者：{winner}",
+    iso_title: "⚠️ 自動判定", iso_msg: "孤立した石のみ残りました（残り{c}個）。\nルールに基づき判定します：\n勝者：{winner}",
+    surrender_title: "🏳️ 投降", surrender_msg: "{loser} が降参しました。\n勝者：{winner}！",
+    howto: `<ol><li><b>目的</b>：交互に石を取り合い、なくなるまで続けます。</li><li><b>石を取る</b>：始点と終点を選択します。間の石は連続している必要があり、空きスペースは飛ばせません。</li><li><b>制限</b>：1回につき1個から（段数-1）個まで取れます。</li><li><b>勝敗判定</b>：隣り合う石がなくなると、自動的に勝敗が判定されます。</li><li><b>機能</b>：開始前に先攻切替可。待ったは連続2回まで。</li></ol>`,
+    howto_pro: `【レベル2の石】<br><b>オレンジ</b>の石は「レベル2」です。<br>一度取ると、消滅せずに青色（レベル1）に<b>ランクダウン</b>します。<br>青色の石を取ると、盤上から取り除かれます。<br><br>【勝敗判定：重み付け総和】<br>孤立した石のみになった場合、<b>残りの強制手数</b>に基づいて勝敗を判定します：<br>青 = 1手、オレンジ = 2手。`
   },
   th: {
-    title: "เกมกลยุทธ์สามเหลี่ยม",
-    opponent: "คู่ต่อสู้:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
-    size_suffix: "ชั้น",
-    human: "เล่น 2 คน", ai_normal: "AI เก่ง", ai_easy: "AI ง่าย",
-
-    name_p1: "ผู้เล่น 1", name_p2: "ผู้เล่น 2", name_human: "มนุษย์",
-    name_ai_strong: "AI เก่ง", name_ai_weak: "AI ง่าย",
-
-    rule_title_short: "กติกา",
-    rule_lose: "หยิบคนสุดท้าย = 【แพ้】", rule_win: "หยิบคนสุดท้าย = 【ชนะ】",
-    start: "เริ่มเกม", confirm: "ยืนยัน", cancel: "เลือกใหม่",
-    undo: "ย้อนกลับ ({n})", surrender: "ยอมแพ้",
-    restart: "เล่นอีกครั้ง", back: "เมนูหลัก",
-    scoreboard: "คะแนน", howto_title: "วิธีเล่น",
-    status_turn: "ตาของ: {player}",
-    status_ai: "🤖 AI กำลังคิด...",
-    
-    btn_switch_prefix: "สลับลำดับเล่น",
-
-    win_title: "🎉 จบเกม",
-    win_msg: "ผู้ชนะคือ: {winner}",
-    iso_title: "⚠️ ตัดสินอัตโนมัติ",
-    iso_msg: "เหลือเพียงหินที่แยกตัว ({c} ก้อน)\nระบบคำนวณผลแพ้ชนะอัตโนมัติ:\nผู้ชนะ: {winner}",
-    surrender_title: "🏳️ ยอมแพ้",
-    surrender_msg: "{loser} ยอมแพ้แล้ว\nยินดีด้วย {winner} ชนะ!",
-
-    howto: `
-      <ol>
-        <li><b>เป้าหมาย</b>: ผลัดกันหยิบหินออกจากกระดาน จนกว่าจะหมด</li>
-        <li><b>วิธีเดินหมาก</b>:
-           คลิกที่หินเพื่อเลือก <b>จุดเริ่มต้น</b> และคลิกอีกก้อนเพื่อเลือก <b>จุดสิ้นสุด</b> (ต้องเป็นเส้นตรงเดียวกัน) หากต้องการหยิบแค่ 1 ก้อน ให้คลิกที่หินเดิมซ้ำ</li>
-        <li><b>ข้อจำกัด</b>: หยิบได้อย่างน้อย 1 ก้อน และสูงสุด (จำนวนชั้น - 1) ก้อนต่อตา</li>
-        <li><b>การตัดสินอัตโนมัติ</b>: เมื่อเหลือแต่หินที่ไม่ติดกัน ระบบจะคำนวณผู้ชนะให้ทันที</li>
-        <li><b>ตัวช่วย</b>: สามารถย้อนกลับ (Undo) ได้ 2 ครั้งต่อเกม และมีปุ่มยอมแพ้</li>
-      </ol>
-    `
+    title: "เกมกลยุทธ์สามเหลี่ยม", title_pro: "เกมกลยุทธ์สามเหลี่ยม โปร", board_select: "เลือกกระดาน:",
+    btn_std: "โหมดมาตรฐาน", btn_pro: "โหมดโปร", opponent: "คู่ต่อสู้:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
+    size_suffix: "ชั้น", human: "เล่น 2 คน", ai_normal: "AI เก่ง", ai_easy: "AI ง่าย",
+    map_iron: "หัวใจเหล็ก", map_honey: "รังผึ้ง", map_sky: "ระเบียงลอยฟ้า", map_hourglass: "นาฬิกาทราย",
+    map_boomerang: "บูมเมอแรง", map_donut: "โดนัท", map_bridge: "สะพานขาด", map_tetris: "เตตริส", map_ruins: "ซากปรักหักพัง",
+    name_p1: "ผู้เล่น 1", name_p2: "ผู้เล่น 2", name_human: "มนุษย์", name_ai_strong: "AI เก่ง", name_ai_weak: "AI ง่าย",
+    rule_title_short: "กติกา", rule_lose: "หยิบคนสุดท้าย = 【แพ้】", rule_win: "หยิบคนสุดท้าย = 【ชนะ】",
+    start: "เริ่มเกม", confirm: "ยืนยัน", cancel: "เลือกใหม่", undo: "ย้อนกลับ ({n})", surrender: "ยอมแพ้",
+    restart: "เล่นอีกครั้ง", back: "เมนูหลัก", scoreboard: "คะแนน", howto_title: "วิธีเล่น", howto_title_pro: "กติกาพิเศษ",
+    status_turn: "ตาของ: {player}", status_ai: "🤖 AI กำลังคิด...", btn_switch_prefix: "สลับลำดับเล่น",
+    win_title: "🎉 จบเกม", win_msg: "ผู้ชนะคือ: {winner}",
+    iso_title: "⚠️ ตัดสินอัตโนมัติ", iso_msg: "เหลือเพียงหินที่แยกตัว ({c} ก้อน)\nระบบคำนวณผลแพ้ชนะอัตโนมัติ:\nผู้ชนะ: {winner}",
+    surrender_title: "🏳️ ยอมแพ้", surrender_msg: "{loser} ยอมแพ้แล้ว\nยินดีด้วย {winner} ชนะ!",
+    howto: `<ol><li><b>เป้าหมาย</b>: ผลัดกันหยิบหินจนหมดกระดาน</li><li><b>วิธีหยิบ</b>: เลือกจุดเริ่มต้นและสิ้นสุด ต้องเป็นเส้นตรงต่อเนื่อง ห้ามข้ามช่องว่าง</li><li><b>ข้อจำกัด</b>: หยิบ 1 ถึง (จำนวนชั้น - 1) ก้อนต่อตา</li><li><b>ตัดสิน</b>: ระบบตัดสินผู้ชนะทันทีเมื่อไม่มีหินติดกัน</li><li><b>ฟีเจอร์</b>: สลับคนเริ่มก่อนได้ และย้อนกลับได้ 2 ครั้ง</li></ol>`,
+    howto_pro: `【หินระดับ 2】<br>หินสี<b>ส้ม</b> คือ "หินระดับ 2"<br>เมื่อถูกหยิบครั้งแรก จะ<b>ลดระดับ</b>กลายเป็นสีฟ้า (ไม่หายไป)<br>ต้องหยิบตอนเป็นสีฟ้าอีกครั้งถึงจะออกจากกระดาน<br><br>【การตัดสินแพ้ชนะ】<br>เมื่อเหลือแต่หินที่แยกตัว ระบบจะตัดสินจาก <b>จำนวนตาเดินที่บังคับเหลืออยู่</b>:<br>สีฟ้า = 1 ตา, สีส้ม = 2 ตา`
   }
 };
 
@@ -582,72 +537,113 @@ let currLang = 'zh';
 
 function setLang(lang) {
   currLang = lang;
-  
-  // 更新一般文字
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
   });
   
-  // 更新下拉選單中的「層數」文字
-  const sizeSelect = document.getElementById('setting-size');
-  Array.from(sizeSelect.options).forEach(opt => {
-    opt.text = `${opt.value} ${I18N[lang].size_suffix}`;
-  });
+  const boardSelect = document.getElementById('setting-board-select');
+  if (boardSelect) {
+      const keys = ['map_iron', 'map_honey', 'map_sky', 'map_hourglass', 'map_boomerang', 'map_donut', 'map_bridge', 'map_tetris', 'map_ruins'];
+      Array.from(boardSelect.options).forEach((opt, idx) => {
+          if (keys[idx] && I18N[lang][keys[idx]]) opt.text = I18N[lang][keys[idx]];
+      });
+  }
 
-  // 更新規則
-  document.getElementById('howto-text').innerHTML = I18N[lang].howto;
+  const sizeSelect = document.getElementById('setting-size');
+  if(sizeSelect) {
+      Array.from(sizeSelect.options).forEach(opt => opt.text = `${opt.value} ${I18N[lang].size_suffix}`);
+  }
+
+  const stdRule = document.getElementById('howto-text');
+  if (stdRule) stdRule.innerHTML = I18N[lang].howto;
+  const proRule = document.getElementById('howto-text-pro');
+  if (proRule) proRule.innerHTML = I18N[lang].howto_pro;
   
-  // 更新按鈕狀態
   document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
   const langMap = { 'zh':0, 'en':1, 'ja':2, 'th':3 };
-  document.querySelectorAll('.lang-btn')[langMap[lang]].classList.add('active');
+  document.querySelectorAll('.lang-switch').forEach(container => {
+      const btns = container.querySelectorAll('.lang-btn');
+      if (btns[langMap[lang]]) btns[langMap[lang]].classList.add('active');
+  });
 
-  // 如果遊戲進行中，更新介面文字
   if (game && game.state !== 'menu') game.updateUI();
 }
 
-/* =========================================
-   2. 遊戲核心邏輯
-   ========================================= */
+function switchEdition(edition) {
+  const track = document.getElementById('slider-track');
+  const pageStd = document.getElementById('menu-std');
+  const pagePro = document.getElementById('menu-pro');
+  const titleEl = document.getElementById('main-title');
+  const allToggles = document.querySelectorAll('.edition-toggle');
+
+  if (edition === 'std') {
+    track.style.transform = 'translateX(0)';
+    pageStd.classList.add('active-page'); pagePro.classList.remove('active-page');
+    titleEl.classList.remove('pro-active'); titleEl.dataset.i18n = 'title';
+    allToggles.forEach(toggle => {
+      const btns = toggle.querySelectorAll('.toggle-btn');
+      if(btns.length >= 2) { btns[0].classList.add('active'); btns[1].classList.remove('active'); }
+    });
+  } else {
+    track.style.transform = 'translateX(-50%)';
+    pagePro.classList.add('active-page'); pageStd.classList.remove('active-page');
+    titleEl.classList.add('pro-active'); titleEl.dataset.i18n = 'title_pro';
+    allToggles.forEach(toggle => {
+      const btns = toggle.querySelectorAll('.toggle-btn');
+      if(btns.length >= 2) { btns[0].classList.remove('active'); btns[1].classList.add('active'); }
+    });
+  }
+  setLang(currLang);
+}
+
 class TriangularNim {
   constructor() {
     this.canvas = document.getElementById('board');
     this.ctx = this.canvas.getContext('2d');
-    
     this.rows = 5;
     this.stones = [];
     this.scores = [0, 0];
-    this.state = 'menu'; // menu, playing, locked, gameover
-    this.gameStarted = false; // 紀錄是否已執行第一步
-    
+    this.state = 'menu';
+    this.gameStarted = false;
     this.mode = 'human';
     this.rule = 'lose';
-    this.turn = 0; // 0 = Player/P1, 1 = AI/P2
-    
+    this.turn = 0;
     this.selection = { start: null, line: [] };
     this.history = [];
     this.undoCount = 0;
     this.MAX_UNDO = 2;
     this.memo = new Map();
-
     this.bindEvents();
-    window.addEventListener('resize', () => {
-       if (this.state !== 'menu') this.resize();
-    });
+    window.addEventListener('resize', () => { if (this.state !== 'menu') this.resize(); });
   }
 
-  // --- 初始化 ---
   start() {
+    this.isProMode = false; 
     this.rows = parseInt(document.getElementById('setting-size').value);
     this.mode = document.getElementById('setting-mode').value;
     this.rule = document.getElementById('setting-rule').value;
     this.maxTake = this.rows - 1;
-
     this.scores = [0, 0];
-    document.getElementById('menu').classList.add('hidden');
+    document.getElementById('menu-container').classList.add('hidden');
     document.getElementById('game-view').classList.remove('hidden');
+    this.startNewRound();
+  }
 
+  startPro() {
+    this.isProMode = true;
+    this.mode = document.getElementById('setting-mode-pro').value;
+    this.rule = document.getElementById('setting-rule-pro').value;
+    this.boardType = document.getElementById('setting-board-select').value;
+
+    if (this.boardType === 'iron_heart') this.rows = 5;
+    else if (['boomerang', 'donut'].includes(this.boardType)) this.rows = 6;
+    else this.rows = 7; 
+
+    this.maxTake = this.rows - 1; 
+    this.scores = [0, 0];
+    document.getElementById('menu-container').classList.add('hidden');
+    document.getElementById('game-view').classList.remove('hidden');
     this.startNewRound();
   }
 
@@ -655,347 +651,252 @@ class TriangularNim {
     this.initStones();
     this.turn = 0;
     this.state = 'playing';
-    this.gameStarted = false; // 重置遊戲開始狀態
+    this.gameStarted = false; 
     this.history = [];
     this.undoCount = 0;
     this.resetSelection();
     this.hideBanner(); 
-
-    requestAnimationFrame(() => {
-        this.resize();
-        this.updateUI();
-    });
+    requestAnimationFrame(() => { this.resize(); this.updateUI(); });
   }
 
   initStones() {
     this.stones = [];
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c <= r; c++) {
-        this.stones.push({r, c, active: true, x:0, y:0});
+        this.stones.push({r, c, active: true, level: 1, x:0, y:0, flash: 0});
       }
     }
-  }
 
-  // --- 切換先後手 ---
-  toggleTurn() {
-    if (this.gameStarted) return; 
+    if (this.isProMode) {
+       if (this.boardType === 'iron_heart') {
+          this.applyMapConfig([[2,1], [3,1], [3,2]], 2);
+       }
+       else if (['honeycomb', 'sky_corridor', 'bridge'].includes(this.boardType)) {
+          this.removeStone(0,0);
+          this.removeStone(1,0); this.removeStone(1,1);
+          this.removeStone(5,0); this.removeStone(6,0); this.removeStone(6,1);
+          this.removeStone(5,5); this.removeStone(6,5); this.removeStone(6,6);
 
-    this.resetSelection();
-    this.turn = 1 - this.turn;
-    this.updateUI();
+          if (this.boardType === 'honeycomb') {
+              this.applyMapConfig([[4,2], [3,1], [3,2], [4,1], [4,3], [5,2], [5,3]], 2);
+          } else if (this.boardType === 'sky_corridor') {
+              const h_bridge = [[4,0], [4,1], [4,2], [4,3], [4,4]];
+              const v_pillar = [[3,1], [3,2], [5,2], [5,3], [2,0], [2,2], [6,2], [6,4]];
+              this.applyMapConfig([...h_bridge, ...v_pillar], 2);
+          } else if (this.boardType === 'bridge') { 
+              this.removeStone(4,0); this.removeStone(4,1); this.removeStone(4,3); this.removeStone(4,4);
+              this.stones.forEach(s => { if (s.active && s.c <= 2) s.level = 2; });
+              const bridge = this.stones.find(s => s.r===4 && s.c===2);
+              if(bridge) bridge.level = 1; 
+          }
+       }
+       else if (this.boardType === 'hourglass') {
+          // 沙漏: 挖掉 Row 3,4 的兩側，保留中心
+          this.removeStone(3,0); this.removeStone(3,3); 
+          this.removeStone(4,0); this.removeStone(4,4);
+          this.removeStone(5,0); this.removeStone(6,0); this.removeStone(6,1); 
+          this.removeStone(5,5); this.removeStone(6,5); this.removeStone(6,6); 
+          // 橘色配置: 頂端尖點、頸部、底部中心
+          this.applyMapConfig([[0,0], [2,1], [4,2], [5,2], [5,3], [6,2], [6,3], [6,4]], 2);
+       }
+       else if (this.boardType === 'boomerang') {
+          for(let r=2; r<6; r++) { for(let c=2; c<r-1; c++) this.removeStone(r, c); }
+          this.applyMapConfig([[0,0], [1,0], [1,1], [5,0], [5,1], [5,4], [5,5]], 2);
+       }
+       else if (this.boardType === 'donut') {
+          // 甜甜圈: 6層六角形 (移除角)
+          this.removeStone(0,0); 
+          this.removeStone(5,0); this.removeStone(5,5); 
+          // 挖中心孔
+          this.removeStone(3,1); this.removeStone(3,2); this.removeStone(4,2);
+          // 橘色內圈，藍色外圈
+          // 手動指定橘色內圈 (圍繞孔洞)
+          const innerRing = [[2,0], [2,1], [2,2], [3,0], [3,3], [4,1], [4,3], [5,2], [5,3]];
+          this.applyMapConfig(innerRing, 2);
+       }
+       else if (this.boardType === 'tetris') {
+          // 不規則挖洞
+          this.removeStone(0,0); this.removeStone(6,0); this.removeStone(6,5); this.removeStone(3,0); this.removeStone(3,3);
+          // 俄羅斯方塊形狀 (I, O, Z/L)
+          const shapeI = [[1,0], [2,0], [2,1], [2,2], [3,2]]; // ㄣ形
+          const shapeO = [[4,0], [5,0], [5,1], [6,1]]; // 田字 (菱形視感)
+          const shapeL = [[4,4], [5,4], [6,3], [6,4]]; // 類似L
+          this.applyMapConfig([...shapeI, ...shapeO, ...shapeL], 2);
+       }
+       else if (this.boardType === 'ruins') {
+          // 1. 不對稱挖洞 (左上崩塌, 右下崩塌, 中間裂痕)
+          this.removeStone(0,0); this.removeStone(1,0); this.removeStone(2,0);
+          this.removeStone(6,5); this.removeStone(6,6); this.removeStone(5,5);
+          this.removeStone(3,2); this.removeStone(4,2);
 
-    // 如果切換後輪到 AI 且不是真人對戰
-    if (this.mode !== 'human' && this.turn === 1) {
-        this.state = 'locked';
-        setTimeout(() => this.runAI(), 500);
+          // 2. 橘色配置 (斷垣殘壁)
+          const pillar = [[2,1], [3,1], [4,1], [5,1]]; // 左柱
+          const wall = [[3,3], [4,3], [4,4]]; // 右壁
+          const debris = [[1,1], [6,2], [5,0], [6,4]]; // 瓦礫
+
+          this.applyMapConfig([...pillar, ...wall, ...debris], 2);
+       }
     }
   }
 
-  // --- 繪圖 ---
+  removeStone(r, c) { const s = this.stones.find(st => st.r === r && st.c === c); if (s) s.active = false; }
+  applyMapConfig(targets, lvl) { targets.forEach(([tr, tc]) => { const s = this.stones.find(st => st.r === tr && st.c === tc); if (s) s.level = lvl; }); }
+
+  toggleTurn() {
+    if (this.gameStarted) return; 
+    this.resetSelection(); this.turn = 1 - this.turn; this.updateUI();
+    if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 500); }
+  }
+
   resize() {
-    const container = this.canvas.parentElement;
-    if (!container) return;
-    
-    const w = Math.min(container.clientWidth, 800); 
-    const h = Math.max(w * 0.75, 400); 
-
+    const container = this.canvas.parentElement; if (!container) return;
+    const w = Math.min(container.clientWidth, 800); const h = Math.max(w * 0.75, 400); 
     const dpr = window.devicePixelRatio || 1;
-    this.canvas.width = w * dpr;
-    this.canvas.height = h * dpr;
-    this.canvas.style.width = w + 'px';
-    this.canvas.style.height = h + 'px';
+    this.canvas.width = w * dpr; this.canvas.height = h * dpr;
+    this.canvas.style.width = w + 'px'; this.canvas.style.height = h + 'px';
     this.ctx.scale(dpr, dpr);
-
     this.radius = w / (this.rows * 3 + 2);
     const spacing = this.radius * 2.5;
     const boardH = (this.rows - 1) * (spacing * 0.866);
-    const offsetY = (h - boardH) / 2;
-    const offsetX = w / 2;
-
-    this.stones.forEach(s => {
-      s.x = offsetX + (s.c - s.r / 2) * spacing;
-      s.y = offsetY + s.r * (spacing * 0.866);
-    });
-
+    const offsetY = (h - boardH) / 2; const offsetX = w / 2;
+    this.stones.forEach(s => { s.x = offsetX + (s.c - s.r / 2) * spacing; s.y = offsetY + s.r * (spacing * 0.866); });
     this.draw();
   }
 
   draw() {
-    const w = this.canvas.width / (window.devicePixelRatio||1);
-    const h = this.canvas.height / (window.devicePixelRatio||1);
+    const w = this.canvas.width / (window.devicePixelRatio||1); const h = this.canvas.height / (window.devicePixelRatio||1);
     this.ctx.clearRect(0, 0, w, h);
-
     if (this.selection.line.length > 1) {
-      const start = this.selection.line[0];
-      const end = this.selection.line[this.selection.line.length - 1];
-      this.ctx.beginPath();
-      this.ctx.lineCap = 'round';
-      this.ctx.lineWidth = this.radius * 1.6;
-      this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
-      this.ctx.moveTo(start.x, start.y);
-      this.ctx.lineTo(end.x, end.y);
-      this.ctx.stroke();
+      const start = this.selection.line[0]; const end = this.selection.line[this.selection.line.length - 1];
+      this.ctx.beginPath(); this.ctx.lineCap = 'round'; this.ctx.lineWidth = this.radius * 1.6;
+      this.ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)'; this.ctx.moveTo(start.x, start.y); this.ctx.lineTo(end.x, end.y); this.ctx.stroke();
     }
-
     this.stones.forEach(s => {
       if (!s.active) return;
-      
-      this.ctx.beginPath();
-      this.ctx.arc(s.x, s.y, this.radius, 0, Math.PI*2);
-      
-      const isSelected = this.selection.line.includes(s);
-      const isStart = (s === this.selection.start);
-
-      if (isSelected) {
-        this.ctx.fillStyle = '#facc15';
-        this.ctx.shadowColor = '#facc15';
-        this.ctx.shadowBlur = 15;
-      } else {
-        this.ctx.fillStyle = '#38bdf8';
-        this.ctx.shadowBlur = 0;
-      }
-      this.ctx.fill();
-
-      if (isStart) {
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeStyle = '#fff';
-        this.ctx.stroke();
-      }
+      this.ctx.beginPath(); this.ctx.arc(s.x, s.y, this.radius, 0, Math.PI*2);
+      const isSelected = this.selection.line.includes(s); const isStart = (s === this.selection.start);
+      if (s.level === 2) { this.ctx.fillStyle = isSelected ? '#fed7aa' : '#f97316'; this.ctx.shadowColor = '#f97316'; }
+      else { this.ctx.fillStyle = isSelected ? '#facc15' : '#38bdf8'; this.ctx.shadowColor = '#38bdf8'; }
+      this.ctx.shadowBlur = isSelected ? 20 : 0; this.ctx.fill();
+      if (s.level === 2) { this.ctx.beginPath(); this.ctx.arc(s.x, s.y, this.radius * 0.4, 0, Math.PI*2); this.ctx.fillStyle = 'rgba(255,255,255,0.3)'; this.ctx.fill(); }
+      if (s.flash > 0) { this.ctx.fillStyle = `rgba(255, 255, 255, ${s.flash / 20})`; this.ctx.fill(); s.flash--; requestAnimationFrame(() => this.draw()); }
+      if (isStart) { this.ctx.lineWidth = 3; this.ctx.strokeStyle = '#fff'; this.ctx.stroke(); }
     });
   }
 
-  // --- 互動 ---
   bindEvents() {
     const handler = (e) => {
-      if (this.state !== 'playing') return;
-      if (this.turn === 1 && this.mode !== 'human') return;
-
+      if (this.state !== 'playing') return; if (this.turn === 1 && this.mode !== 'human') return;
       e.preventDefault();
       const rect = this.canvas.getBoundingClientRect();
-      const cx = e.touches ? e.touches[0].clientX : e.clientX;
-      const cy = e.touches ? e.touches[0].clientY : e.clientY;
-      const x = cx - rect.left;
-      const y = cy - rect.top;
-
-      const hit = this.stones.find(s => {
-        return s.active && Math.hypot(s.x - x, s.y - y) < this.radius * 1.8;
-      });
-
-      if (e.type === 'mousedown' || e.type === 'touchstart') {
-        if (hit) this.handleInput(hit);
-      }
+      const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      const hit = this.stones.find(s => s.active && Math.hypot(s.x - (cx - rect.left), s.y - (cy - rect.top)) < this.radius * 1.8);
+      if ((e.type === 'mousedown' || e.type === 'touchstart') && hit) this.handleInput(hit);
     };
     this.canvas.addEventListener('mousedown', handler);
     this.canvas.addEventListener('touchstart', handler, {passive: false});
   }
 
   handleInput(stone) {
-    if (!this.selection.start) {
-      this.selection.start = stone;
-      this.selection.line = [stone];
-    } else {
-      if (stone === this.selection.start) {
-        this.selection.line = [stone];
-      } else {
+    if (!this.selection.start) { this.selection.start = stone; this.selection.line = [stone]; } 
+    else {
+      if (stone === this.selection.start) this.selection.line = [stone];
+      else {
         const line = this.calculateLine(this.selection.start, stone);
-        if (line) {
-          this.selection.line = line;
-        } else {
-          this.selection.start = stone;
-          this.selection.line = [stone];
-        }
+        if (line) this.selection.line = line; else { this.selection.start = stone; this.selection.line = [stone]; }
       }
     }
-    this.draw();
-    this.updateUI();
+    this.draw(); this.updateUI();
   }
 
   calculateLine(start, end) {
-    const dr = end.r - start.r;
-    const dc = end.c - start.c;
+    const dr = end.r - start.r; const dc = end.c - start.c;
     let sr=0, sc=0;
-    
-    if (dr===0) { sr=0; sc = dc>0?1:-1; }
-    else if (dc===0) { sr = dr>0?1:-1; sc=0; }
-    else if (dr===dc) { sr = dr>0?1:-1; sc = dc>0?1:-1; }
-    else return null; 
-
-    const line = [];
-    let curr = start;
+    if (dr===0) { sr=0; sc = dc>0?1:-1; } else if (dc===0) { sr = dr>0?1:-1; sc=0; } else if (dr===dc) { sr = dr>0?1:-1; sc = dc>0?1:-1; } else return null; 
+    const line = []; let curr = start;
     while(true) {
-      if (!curr.active) return null; 
-      line.push(curr);
+      if (!curr.active) return null; line.push(curr);
       if (curr === end) break;
-      const nr = curr.r + sr, nc = curr.c + sc;
-      const next = this.stones.find(s => s.r===nr && s.c===nc);
-      if (!next) return null;
-      curr = next;
+      const next = this.stones.find(s => s.r===curr.r+sr && s.c===curr.c+sc);
+      if (!next) return null; curr = next;
     }
-    if (line.length > this.maxTake) return null;
-    return line;
+    if (line.length > this.maxTake) return null; return line;
   }
 
-  // --- 遊戲邏輯 ---
-  saveState() {
-    const stateSnapshot = {
-        stones: this.stones.map(s => ({...s})),
-        turn: this.turn
-    };
-    this.history.push(stateSnapshot);
-  }
+  saveState() { this.history.push({ stones: this.stones.map(s => ({...s})), turn: this.turn }); }
 
   confirmMove() {
     if (this.selection.line.length === 0) return;
-
-    this.gameStarted = true;
-
-    this.saveState();
-    this.undoCount = 0; 
-    this.selection.line.forEach(s => s.active = false);
+    this.gameStarted = true; this.saveState(); this.undoCount = 0; 
+    this.selection.line.forEach(s => { if (s.level > 1) { s.level--; s.flash = 20; } else { s.active = false; } });
     this.resetSelection();
-    
     if (this.checkWin()) return;
-
     this.turn = 1 - this.turn;
-    
     if (this.checkIsolatedWin()) return;
-
-    this.draw();
-    this.updateUI();
-
-    if (this.mode !== 'human' && this.turn === 1) {
-      this.state = 'locked';
-      setTimeout(() => this.runAI(), 600);
-    }
+    this.draw(); this.updateUI();
+    if (this.mode !== 'human' && this.turn === 1) { this.state = 'locked'; setTimeout(() => this.runAI(), 600); }
   }
 
   undo() {
     if (this.history.length === 0 || this.undoCount >= this.MAX_UNDO) return;
-    
-    if (this.mode !== 'human') {
-        if (this.history.length < 2) return;
-        this.history.pop(); 
-        const prevState = this.history.pop();
-        this.restoreState(prevState);
-    } else {
-        const prevState = this.history.pop();
-        this.restoreState(prevState);
-    }
-    this.undoCount++;
-    this.state = 'playing'; 
-    this.hideBanner();
-    this.resetSelection();
-    this.draw();
-    this.updateUI();
+    if (this.mode !== 'human' && this.history.length < 2) return;
+    const steps = (this.mode !== 'human') ? 2 : 1;
+    for(let i=0; i<steps; i++) { if(this.history.length>0) { const s = this.history.pop(); this.restoreState(s); } }
+    this.undoCount++; this.state = 'playing'; this.hideBanner(); this.resetSelection(); this.draw(); this.updateUI();
   }
-
-  restoreState(state) {
-      this.stones = state.stones; 
-      this.turn = state.turn;
-      this.resize();
-  }
+  restoreState(state) { this.stones = state.stones; this.turn = state.turn; this.resize(); }
 
   surrender() {
-    this.state = 'gameover';
-    const loser = this.getPlayerName(this.turn);
-    const winner = this.getPlayerName(1 - this.turn);
-    this.scores[1 - this.turn]++;
-    this.updateScoreDisplay();
-    this.showBanner('surrender', {loser, winner});
+    this.state = 'gameover'; this.scores[1 - this.turn]++;
+    this.updateScoreDisplay(); this.showBanner('surrender', {loser: this.getPlayerName(this.turn), winner: this.getPlayerName(1 - this.turn)});
     this.disableControls();
   }
 
-  // --- 勝負判定 ---
   checkWin() {
-    const alive = this.stones.filter(s => s.active).length;
-    if (alive > 0) return false;
-    
+    if (this.stones.filter(s => s.active).length > 0) return false;
     this.state = 'gameover';
     let winnerIdx = (this.rule === 'lose') ? (1 - this.turn) : this.turn;
     this.scores[winnerIdx]++;
-    
-    const winner = this.getPlayerName(winnerIdx);
-    this.showBanner('win', {winner});
-    this.updateScoreDisplay();
-    this.disableControls();
+    this.showBanner('win', {winner: this.getPlayerName(winnerIdx)});
+    this.updateScoreDisplay(); this.disableControls();
     return true;
   }
 
   checkIsolatedWin() {
     const activeStones = this.stones.filter(s => s.active);
     const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
-    
-    const hasNeighbors = activeStones.some(s => {
-        return dirs.some(d => {
-            return this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1]);
-        });
-    });
-
+    const hasNeighbors = activeStones.some(s => dirs.some(d => this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1])));
     if (hasNeighbors) return false;
-
     this.state = 'gameover';
-    const count = activeStones.length;
-    const lastTakerIdx = (count % 2 === 1) ? this.turn : (1 - this.turn);
+    let totalHP = 0; activeStones.forEach(s => totalHP += s.level);
+    const lastTakerIdx = (totalHP % 2 === 1) ? this.turn : (1 - this.turn);
     const winnerIdx = (this.rule === 'lose') ? (1 - lastTakerIdx) : lastTakerIdx;
-
     this.scores[winnerIdx]++;
-    const winner = this.getPlayerName(winnerIdx);
-    
-    this.draw();
-    this.updateScoreDisplay();
-    
-    this.showBanner('iso', {c: count, winner: winner});
-    this.disableControls();
-    return true;
+    this.draw(); this.updateScoreDisplay();
+    this.showBanner('iso', {c: activeStones.length, winner: this.getPlayerName(winnerIdx)});
+    this.disableControls(); return true;
   }
 
-  // --- Banner 顯示系統 ---
   showBanner(type, vars) {
     const overlay = document.getElementById('result-overlay');
-    const titleEl = document.getElementById('res-title');
-    const descEl = document.getElementById('res-desc');
-    
-    let titleKey = type + '_title';
-    let msgKey = type + '_msg';
-    
-    let title = I18N[currLang][titleKey];
-    let msg = I18N[currLang][msgKey];
-
-    for (let k in vars) {
-        msg = msg.replace(`{${k}}`, vars[k]);
-    }
-
-    titleEl.innerText = title;
-    descEl.innerText = msg;
-    
-    overlay.classList.add('show');
-    document.getElementById('status').innerText = "";
+    let msg = I18N[currLang][type + '_msg'];
+    for (let k in vars) msg = msg.replace(`{${k}}`, vars[k]);
+    document.getElementById('res-title').innerText = I18N[currLang][type + '_title'];
+    document.getElementById('res-desc').innerText = msg;
+    overlay.classList.add('show'); document.getElementById('status').innerText = "";
   }
+  hideBanner() { document.getElementById('result-overlay').classList.remove('show'); }
 
-  hideBanner() {
-    document.getElementById('result-overlay').classList.remove('show');
-  }
-
-  // --- AI (Minimax + Memoization) ---
   getAllMoves(stonesState = null) {
-    const moves = [];
-    const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
-    const currentStones = stonesState || this.stones;
-    const actives = currentStones.filter(s => s.active);
-
+    const moves = []; const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
+    const currentStones = stonesState || this.stones; const actives = currentStones.filter(s => s.active);
     actives.forEach(start => {
       moves.push([start]); 
       dirs.forEach(d => {
-        let line = [start];
-        let curr = start;
+        let line = [start]; let curr = start;
         for (let i = 1; i < this.maxTake; i++) {
-          const nr = curr.r + d[0];
-          const nc = curr.c + d[1];
-          const next = currentStones.find(s => s.active && s.r === nr && s.c === nc);
-          if (!next) break;
-          curr = next;
-          line.push(next);
-          moves.push([...line]);
+          const next = currentStones.find(s => s.active && s.r === curr.r + d[0] && s.c === curr.c + d[1]);
+          if (!next) break; curr = next; line.push(next); moves.push([...line]);
         }
       });
     });
@@ -1006,183 +907,101 @@ class TriangularNim {
     if (this.state === 'gameover') return;
     const moves = this.getAllMoves();
     let bestMove = null;
-
-    // --- 弱 AI (隨機) ---
-    if (this.mode === 'weak') {
-      bestMove = moves[Math.floor(Math.random() * moves.length)];
-    } 
-    // --- 強 AI ---
+    if (this.mode === 'weak') bestMove = moves[Math.floor(Math.random() * moves.length)];
     else {
-      const activeCount = this.stones.filter(s => s.active).length;
-      
-      if (activeCount <= 12) {
-        this.memo = new Map();
-        this.shuffle(moves);
-
+      let totalHP = 0; this.stones.forEach(s => { if(s.active) totalHP += s.level; });
+      if (totalHP <= 15) { 
+        this.memo = new Map(); this.shuffle(moves);
         for (let move of moves) {
-          move.forEach(s => s.active = false);
-          const opponentCanWin = this.solveState(); 
-          move.forEach(s => s.active = true);
-
-          if (!opponentCanWin) { 
-            bestMove = move;
-            break; 
-          }
+             const originalLevels = move.map(s => s.level);
+             move.forEach((s, i) => { if (originalLevels[i] === 1) s.active = false; else s.level = 1; });
+             let iWin = false;
+             if (this.isStateIsolated()) {
+                 let remHP = 0; this.stones.forEach(s => { if(s.active) remHP += s.level; });
+                 const opponentGetsLast = (remHP % 2 === 1);
+                 iWin = (this.rule === 'lose') ? opponentGetsLast : !opponentGetsLast;
+             } else { iWin = !this.solveState(); }
+             move.forEach((s, i) => { s.level = originalLevels[i]; s.active = true; });
+             if (iWin) { bestMove = move; break; }
         }
         if (!bestMove) bestMove = moves[0];
-      } 
-      else {
-        this.shuffle(moves); 
-        for (let m of moves) {
-          const remaining = activeCount - m.length;
-          if (remaining === 0 && this.rule === 'win') { bestMove = m; break; }
-          if (remaining === 1 && this.rule === 'lose') { bestMove = m; break; }
-        }
-        if (!bestMove) bestMove = moves[0];
-      }
+      } else { this.shuffle(moves); bestMove = moves[0]; }
     }
-
-    this.selection.line = bestMove;
-    this.draw();
-
-    setTimeout(() => {
-      this.confirmMove(); 
-      if (this.state !== 'gameover') this.state = 'playing';
-    }, 600);
+    this.selection.line = bestMove; this.draw();
+    setTimeout(() => { this.confirmMove(); if (this.state !== 'gameover') this.state = 'playing'; }, 600);
   }
 
   solveState() {
-    const stateKey = this.stones.map(s => s.active ? '1' : '0').join('');
+    const stateKey = this.stones.map(s => s.active ? s.level : '0').join('');
     if (this.memo.has(stateKey)) return this.memo.get(stateKey);
-
-    const activeCount = this.stones.filter(s => s.active).length;
-    if (activeCount === 0) {
-        const result = (this.rule === 'lose'); 
-        this.memo.set(stateKey, result);
-        return result;
-    }
-
+    let totalHP = 0; this.stones.forEach(s => { if(s.active) totalHP += s.level; });
+    if (totalHP === 0) { const result = (this.rule === 'lose'); this.memo.set(stateKey, result); return result; }
     const moves = this.getAllMoves();
+    if (moves.length === 0) return (this.rule === 'lose'); 
     for (let move of moves) {
-        move.forEach(s => s.active = false);
-        const opponentCanWin = this.solveState();
-        move.forEach(s => s.active = true);
-
-        if (!opponentCanWin) {
-            this.memo.set(stateKey, true);
-            return true;
-        }
+        const originalLevels = move.map(s => s.level);
+        move.forEach((s, i) => { if (originalLevels[i] === 1) s.active = false; else s.level = 1; });
+        let iWin = false; 
+        if (this.isStateIsolated()) {
+            let remHP = 0; this.stones.forEach(s => { if(s.active) remHP += s.level; });
+            const opponentGetsLast = (remHP % 2 === 1);
+            iWin = (this.rule === 'lose') ? opponentGetsLast : !opponentGetsLast;
+        } else { iWin = !this.solveState(); }
+        move.forEach((s, i) => { s.level = originalLevels[i]; s.active = true; });
+        if (iWin) { this.memo.set(stateKey, true); return true; }
     }
-    this.memo.set(stateKey, false);
-    return false;
+    this.memo.set(stateKey, false); return false;
+  }
+  
+  isStateIsolated() {
+      const activeStones = this.stones.filter(s => s.active);
+      if (activeStones.length === 0) return false; 
+      const dirs = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[-1,-1]];
+      return !activeStones.some(s => dirs.some(d => this.stones.some(n => n.active && n.r === s.r + d[0] && n.c === s.c + d[1])));
   }
 
-  shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-  }
-
-  // --- UI Update ---
+  shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+  
   updateUI() {
     this.updateScoreDisplay();
     document.getElementById('p1-name').innerText = this.getPlayerName(0);
     document.getElementById('p2-name').innerText = this.getPlayerName(1);
-    
-    const ruleHintKey = this.rule === 'lose' ? 'rule_lose' : 'rule_win';
-    document.getElementById('rule-hint').innerText = I18N[currLang][ruleHintKey];
-
+    document.getElementById('rule-hint').innerText = I18N[currLang][this.rule === 'lose' ? 'rule_lose' : 'rule_win'];
     if (this.state !== 'gameover') {
-        const pName = this.getPlayerName(this.turn);
         const isAi = (this.mode !== 'human' && this.turn === 1);
-        const txt = isAi ? I18N[currLang].status_ai 
-                         : I18N[currLang].status_turn.replace('{player}', pName);
-        
-        const el = document.getElementById('status');
-        el.innerText = txt;
-        el.style.color = isAi ? '#facc15' : '#f8fafc';
+        const txt = isAi ? I18N[currLang].status_ai : I18N[currLang].status_turn.replace('{player}', this.getPlayerName(this.turn));
+        const el = document.getElementById('status'); el.innerText = txt; el.style.color = isAi ? '#facc15' : '#f8fafc';
     }
-
     document.getElementById('p1-score-row').classList.toggle('active', this.turn === 0);
     document.getElementById('p2-score-row').classList.toggle('active', this.turn === 1);
-
     const hasSel = this.selection.line.length > 0;
     const isMyTurn = (this.state === 'playing') && (this.mode === 'human' || this.turn === 0);
-
     document.getElementById('btn-confirm').disabled = !(hasSel && isMyTurn);
     document.getElementById('btn-cancel').disabled = !(hasSel && isMyTurn);
-    
-    const undoText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
     const undoBtn = document.getElementById('btn-undo');
-    undoBtn.innerText = undoText;
-    const canUndo = this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn;
-    undoBtn.disabled = !canUndo;
-
+    undoBtn.innerText = I18N[currLang].undo.replace('{n}', this.MAX_UNDO - this.undoCount);
+    undoBtn.disabled = !(this.history.length > 0 && this.undoCount < this.MAX_UNDO && isMyTurn);
     document.getElementById('btn-surrender').innerText = I18N[currLang].surrender;
     document.getElementById('btn-surrender').disabled = !isMyTurn;
-
-    // --- 按鈕更新 (按鈕內顯示文字) ---
     const turnBtn = document.getElementById('btn-turn');
-    if (this.gameStarted) {
-        turnBtn.classList.add('disabled-visual');
-        turnBtn.disabled = true;
-    } else {
-        turnBtn.classList.remove('disabled-visual');
-        turnBtn.disabled = false;
-    }
-    
-    // 顯示文字：切換先手 (目前: P1/P2/AI)
-    const prefix = I18N[currLang].btn_switch_prefix;
-    const currName = this.getPlayerName(this.turn);
-    turnBtn.innerText = `${prefix} [${currName}]`;
+    if (this.gameStarted) { turnBtn.classList.add('disabled-visual'); turnBtn.disabled = true; } 
+    else { turnBtn.classList.remove('disabled-visual'); turnBtn.disabled = false; }
+    turnBtn.innerText = `${I18N[currLang].btn_switch_prefix} [${this.getPlayerName(1 - this.turn)}]`;
   }
 
-  disableControls() {
-      document.getElementById('btn-confirm').disabled = true;
-      document.getElementById('btn-cancel').disabled = true;
-      document.getElementById('btn-undo').disabled = true;
-      document.getElementById('btn-surrender').disabled = true;
-      
-      const turnBtn = document.getElementById('btn-turn');
-      turnBtn.classList.add('disabled-visual');
-      turnBtn.disabled = true;
-  }
-
-  updateScoreDisplay() {
-    document.getElementById('p1-score').innerText = this.scores[0];
-    document.getElementById('p2-score').innerText = this.scores[1];
-  }
-
+  updateScoreDisplay() { document.getElementById('p1-score').innerText = this.scores[0]; document.getElementById('p2-score').innerText = this.scores[1]; }
   getPlayerName(idx) {
-    if (idx === 0) {
-      return (this.mode !== 'human') ? I18N[currLang].name_human : I18N[currLang].name_p1;
-    }
+    if (idx === 0) return (this.mode !== 'human') ? I18N[currLang].name_human : I18N[currLang].name_p1;
     if (this.mode === 'human') return I18N[currLang].name_p2;
-    if (this.mode === 'ai') return I18N[currLang].name_ai_strong;
-    if (this.mode === 'weak') return I18N[currLang].name_ai_weak;
+    return (this.mode === 'ai') ? I18N[currLang].name_ai_strong : I18N[currLang].name_ai_weak;
   }
-
-  resetSelection() {
-    this.selection = { start: null, line: [] };
-    this.draw();
-    this.updateUI();
-  }
-
-  backToMenu() {
-    this.state = 'menu';
-    document.getElementById('game-view').classList.add('hidden');
-    document.getElementById('menu').classList.remove('hidden');
-  }
-
-  restart() {
-    this.startNewRound();
-  }
+  resetSelection() { this.selection = { start: null, line: [] }; this.draw(); this.updateUI(); }
+  backToMenu() { this.state = 'menu'; document.getElementById('game-view').classList.add('hidden'); document.getElementById('menu-container').classList.remove('hidden'); }
+  restart() { this.startNewRound(); }
 }
 
 const game = new TriangularNim();
 setLang('zh');
 </script>
-
 </body>
 </html>
