@@ -510,7 +510,6 @@ const I18N = {
     iso_title: "⚠️ 孤立棋判定", iso_msg: "盤面只剩孤立棋子 (剩 {c} 顆)。\n根據規則，獲勝者是：\n{winner}",
     surrender_title: "🏳️ 投降", surrender_msg: "{loser} 選擇認輸。\n恭喜 {winner} 獲勝！",
     howto: `<ol><li><b>遊戲目標</b>：兩名玩家輪流從棋盤上移除棋子，直到沒有棋子可拿。</li><li><b>移除棋子</b>：點擊棋子選擇欲移除的起點及終點。兩點之間必須是連續的直線，不能跳過空格。</li><li><b>數量限制</b>：每回合至少拿 1 顆，最多可拿 (層數 - 1) 顆。</li><li><b>勝負判定</b>：當盤面上所有棋子都不相鄰時，系統將自動依規則直接判定勝負。</li><li><b>輔助功能</b>：每局遊戲開始前可切換先手，遊戲中最多可連續做 2 次悔棋。</li></ol>`,
-    // 修改：將標題用 <b> 包覆，使其變黃
     howto_pro: `<b>【二階棋子 (Level 2)】</b><br>盤面上 <span class="highlight-orange">橘色</span> 的棋子為「二階棋子」。<br>第一次消除時，它會 <b>降階</b> 變為 <span class="highlight-blue">藍色</span> 棋子，而不會消失。<br>再次消除藍色棋子，才會將其移出棋盤。<br><br><b>【勝負判定：權重總和】</b><br>當盤面剩下不連續的孤立棋子時，系統將依據 <b>剩餘強制步數</b> 判定勝負：<br><span class="highlight-blue">藍色</span> = 1 步，<span class="highlight-orange">橘色</span> = 2 步。`
   },
   en: {
@@ -528,7 +527,6 @@ const I18N = {
     iso_title: "⚠️ Auto-Resolution", iso_msg: "Only isolated stones remain ({c} left).\nBased on the rule, the winner is:\n{winner}",
     surrender_title: "🏳️ Surrender", surrender_msg: "{loser} has surrendered.\n{winner} Wins!",
     howto: `<ol><li><b>Goal</b>: Two players take turns removing stones until none are left.</li><li><b>Remove</b>: Click to select Start and End stones. The line must be continuous and cannot skip empty spaces.</li><li><b>Limits</b>: Take at least 1 stone, max (Rows - 1) stones per turn.</li><li><b>Winning</b>: System automatically decides the winner when no adjacent stones remain.</li><li><b>Features</b>: Toggle turn order before game; max 2 consecutive undos allowed.</li></ol>`,
-    // Modified: Wrapped titles in <b> for yellow color
     howto_pro: `<b>【Level 2 Stones】</b><br><span class="highlight-orange">Orange</span> stones are "Level 2".<br>Taking them once <b>downgrades</b> them to <span class="highlight-blue">Blue</span> (Level 1) instead of removing them.<br>Taking Blue stones removes them from the board.<br><br><b>【Winning Condition】</b><br>When only isolated stones remain, the winner is decided by <b>Remaining Forced Moves</b>:<br><span class="highlight-blue">Blue</span> = 1 Move, <span class="highlight-orange">Orange</span> = 2 Moves.`
   },
   ja: {
@@ -546,11 +544,13 @@ const I18N = {
     iso_title: "⚠️ 自動判定", iso_msg: "孤立した石のみ残りました（残り{c}個）。\nルールに基づき判定します：\n勝者：{winner}",
     surrender_title: "🏳️ 投降", surrender_msg: "{loser} が降参しました。\n勝者：{winner}！",
     howto: `<ol><li><b>目的</b>：交互に石を取り合い、なくなるまで続けます。</li><li><b>石を取る</b>：始点と終点を選択します。間の石は連続している必要があり、空きスペースは飛ばせません。</li><li><b>制限</b>：1回につき1個から（段数-1）個まで取れます。</li><li><b>勝敗判定</b>：隣り合う石がなくなると、自動的に勝敗が判定されます。</li><li><b>機能</b>：開始前に先攻切替可。待ったは連続2回まで。</li></ol>`,
-    // Modified: Wrapped titles in <b> for yellow color
     howto_pro: `<b>【レベル2の石】</b><br><span class="highlight-orange">オレンジ</span>の石は「レベル2」です。<br>一度取ると、消滅せずに<span class="highlight-blue">青色</span>（レベル1）に<b>ランクダウン</b>します。<br>青色の石を取ると、盤上から取り除かれます。<br><br><b>【勝敗判定：重み付け総和】</b><br>孤立した石のみになった場合、<b>残りの強制手数</b>に基づいて勝敗を判定します：<br><span class="highlight-blue">青</span> = 1手、<span class="highlight-orange">オレンジ</span> = 2手。`
   },
   th: {
-    title: "เกมกลยุทธ์สามเหลี่ยม", title_pro: "โหมดโปร", board_select: "เลือกกระดาน:",
+    title: "เกมกลยุทธ์สามเหลี่ยม", 
+    // 修正點：補上標題，變成「遊戲名稱 + Pro」
+    title_pro: "เกมกลยุทธ์สามเหลี่ยม โปร", 
+    board_select: "เลือกกระดาน:",
     btn_std: "โหมดมาตรฐาน", btn_pro: "โหมดโปร", opponent: "รูปแบบการเล่น:", rule: "กติกาแพ้ชนะ:", size: "ขนาดกระดาน:",
     size_suffix: "ชั้น", human: "เล่น 2 คน", ai_normal: "AI เก่ง", ai_easy: "AI ง่าย",
     map_iron: "หัวใจเหล็ก", map_honey: "รังผึ้ง", map_sky: "ระเบียงลอยฟ้า", map_hourglass: "นาฬิกาทราย",
@@ -564,7 +564,6 @@ const I18N = {
     iso_title: "⚠️ ตัดสินอัตโนมัติ", iso_msg: "เหลือเพียงหินที่แยกตัว ({c} ก้อน)\nระบบคำนวณผลแพ้ชนะอัตโนมัติ:\nผู้ชนะ: {winner}",
     surrender_title: "🏳️ ยอมแพ้", surrender_msg: "{loser} ยอมแพ้แล้ว\nยินดีด้วย {winner} ชนะ!",
     howto: `<ol><li><b>เป้าหมาย</b>: ผลัดกันหยิบหินจนหมดกระดาน</li><li><b>วิธีหยิบ</b>: เลือกจุดเริ่มต้นและสิ้นสุด ต้องเป็นเส้นตรงต่อเนื่อง ห้ามข้ามช่องว่าง</li><li><b>ข้อจำกัด</b>: หยิบ 1 ถึง (จำนวนชั้น - 1) ก้อนต่อตา</li><li><b>ตัดสิน</b>: ระบบตัดสินผู้ชนะทันทีเมื่อไม่มีหินติดกัน</li><li><b>ฟีเจอร์</b>: สลับคนเริ่มก่อนได้ และย้อนกลับได้ 2 ครั้ง</li></ol>`,
-    // Modified: Wrapped titles in <b> for yellow color
     howto_pro: `<b>【หินระดับ 2】</b><br>หินสี<span class="highlight-orange">ส้ม</span> คือ "หินระดับ 2"<br>เมื่อถูกหยิบครั้งแรก จะ<b>ลดระดับ</b>กลายเป็นสี<span class="highlight-blue">ฟ้า</span> (ไม่หายไป)<br>ต้องหยิบตอนเป็นสีฟ้าอีกครั้งถึงจะออกจากกระดาน<br><br><b>【การตัดสินแพ้ชนะ】</b><br>เมื่อเหลือแต่หินที่แยกตัว ระบบจะตัดสินจาก <b>จำนวนตาเดินที่บังคับเหลืออยู่</b>:<br>สี<span class="highlight-blue">ฟ้า</span> = 1 ตา, สี<span class="highlight-orange">ส้ม</span> = 2 ตา`
   }
 };
